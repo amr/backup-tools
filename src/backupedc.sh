@@ -7,11 +7,11 @@
 #############
 ## Variables
 #############
-basedir="/home/ahmadsaif/Documents" 	# Main backup directory
+basedir="/home/backup"			# Main backup directory [ Destination ]
 
-backupname="testing" 		# Backup file name
+backupname="projectname"		# Backup file name [ Project name ]
 
-backupdir="/home/ahmadsaif/testi"   # Directory to backup
+backupdir="/var/www/"			# Directory to backup [ Source ]
 
 #For how long do you want to keep the backups 
 # days, weeks, months,etc keep="10 days"
@@ -20,11 +20,11 @@ keep="10 days"
 # Archiver to use (bzip2 or gzip) prefare to be gzip
 archiver="gzip"
 #extend the files names with time stamp and other things 
-suffix=$(date +%F)
-olddir=$(date --date "$keep ago" +%F)
+suffix=`date +%F`
+olddir=`date --date "$keep ago" +%F`
 
 ### notify admin
-admin="ahmed.saif@egyptdc.com"
+admin="ahmed.saif@egyptdc.com" # if more than one admin seperate e-mails with (,) 
 
 #########################################################################
 #########################################################################
@@ -72,8 +72,8 @@ fi
 ################ 
 
 # use nice to be nice with the server :-)
+echo "Copying files to work directory ..."
 nice -n 19 cp -Rf "$backupdir" "$basedir/work"
-echo "Copying files to work directory..."
 
 # move to the work file and start Archiving nicley 
 cd "$basedir/work"
@@ -86,11 +86,13 @@ nice -n 19 $archiver -9f $backupname-$suffix.tar
 ######################################
 ## Move the tars to the storage folder 
 ######################################
+echo "Moving Files to the Final destination "
 mv $backupname-$suffix.$archext $basedir/local
+
 ## Delete the old stuff!
-if [ -d $basedir/local/$backupname-$olddir.$archext ]; then
-echo "Deleting old data..."
-rm -rf $basedir/local/$backupname-$olddir.$arcext
+if [ -e "$basedir/local/$backupname-$olddir.$archext" ]; then
+	echo "Deleting old data..."
+	rm -rf "$basedir/local/$backupname-$olddir.$archext"
 fi
 ## cleanup the temp files and exit
 rm -rf $basedir/work
@@ -98,7 +100,6 @@ echo "Done!"
 ### check for status and relase the lock file 
 if [ $? == 0 ]; then 
 rm -rf $lockfile
-echo "Backup Done correctly at $suffix" | mutt -s "Backup Done !" $admin
-else echo "Backup Failed at $suffix" | mutt -s "!!Backup Failed!!" $admin
+echo "Backup for $backupname Done correctly at $suffix" | mutt -s "Backup Done !" $admin
+else echo "Backup for $backupname Failed at $suffix" | mutt -s "!!Backup Failed!!" $admin
 fi
-
