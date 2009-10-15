@@ -2,6 +2,13 @@
 ###############################################
 # EDC Files Backup Script 
 # Author : Ahmad Saif <ahmed.saif@egyptdc.com>
+#
+# TODO:
+#  * Use `mail` instead of `mutt`
+#  * Rotate using timestamps comparison. Brainstorm:
+#     ls | while read entry; do date=`echo $entry | cut -d'-' -f2-4 | cut -d'.' -f1`; date --date "$date" +%s | sort -n; done | head -n1 | awk '{ print strftime("%F", $0); }'
+#  * Create a directory called "latest/" which always contains the most recent copy
+#  * Link the latest file instead of copying it
 ################################################
 
 #############
