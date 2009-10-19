@@ -20,14 +20,17 @@ backupdir="/home/ahmadsaif/workspace"			# Directory to backup [ Source ]
 
 #For how long do you want to keep the backups 
 # days, weeks, months,etc keep="10 days"
-keep="10 days"
+keep="10"
 
 # Archiver to use (bzip2 or gzip) prefare to be gzip
 archiver="gzip"
 #extend the files names with time stamp and other things 
 suffix=`date +%F`
-olddir=`date --date "$keep ago" +%F`
+##olddir=`date --date "$keep ago" +%F`
 oldthing=$(cd "$basedir/local/" && ls | while read entry; do difdate=`echo $entry | cut -d'-' -f2-4 | cut -d'.' -f1`; date --date "$difdate" +%s | sort -n; done | head -n1 | awk '{ print strftime("%F", $0); }')
+
+#count lines
+count=$(ls | wc -l)
 ### notify admin
 admin="somebody@egyptdc.com" # if more than one admin seperate e-mails with (,) 
 
@@ -96,13 +99,30 @@ nice -n 19 $archiver -9f $backupname-$suffix.tar
 
 echo "Moving Files to the Final destination " >> $logfile
 mv $backupname-$suffix.$archext $basedir/local
+#######################################
+## Rotating Files
+#######################################
+if [ $count -lt $keep ]; then
+	echo "nothing to rotate"
+else
+	echo "rotating"
+
+
+
+
 
 ## Delete the old stuff!
 if [ -e "$basedir/local/$backupname-$oldthing.$archext" ]; then
-	echo "Deleting old data..." >> $logfile
-	rm -rf "$basedir/local/$backupname-$oldthing.$archext"
-	echo "Deleting old links" >> $logfile
-	rm -rf "$basedir/latest/$backupname-$suffix.$archext"
+	if [ $count -lt $keep ]; then
+		        echo "nothing to rotate"
+		else
+			echo "rotating"
+
+			echo "Deleting old data..." >> $logfile
+			rm -rf "$basedir/local/$backupname-$oldthing.$archext"
+			echo "Deleting old links" >> $logfile
+			rm -rf "$basedir/latest/$backupname-$suffix.$archext"
+fi
 fi
 ## cleanup the temp files and exit
 rm -rf $basedir/work
