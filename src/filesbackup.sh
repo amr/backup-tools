@@ -38,6 +38,8 @@ admin="somebody@egyptdc.com" # if more than one admin seperate e-mails with (,)
 #########################################################################
 # Create lock file to prevent multi run 
 lockfile="$basedir/backup.lock"
+#create log file .. 
+logfile="$basedir/backup.log"
 # Create the extension for the archiver based on the Archiving type
 if [ "$archiver" == "bzip2" ]; then
 archext="bz2"
@@ -51,67 +53,73 @@ fi
 
 #check if the $basedir exists and create it.
 if [ ! -e "$basedir" ]; then
-echo "Creating the BASE DIRECTORY $basedir"
+echo "Creating the BASE DIRECTORY $basedir" >> $logfile
 mkdir -p "$basedir"
 fi
 
 #check for The work directory and create it 
 if [ ! -d "$basedir/work" ]; then
-echo "Creating $basedir/work..."
+echo "Creating $basedir/work..." >> $logfile
 mkdir "$basedir/work"
 fi
 
 # check for The local backup directory and create it 
 if [ ! -d "$basedir/local" ]; then
-echo "Creating $basedir/local..."
+echo "Creating $basedir/local..." >> $logfile
 mkdir "$basedir/local"
 fi
 
 # Status 
 if [ ! -d "$lockfile" ]; then
 touch "$lockfile"
-else echo "Backup is already running" && exit 1
+else echo "Backup is already running" && exit 1 >> $logfile
 fi
 ################
 ## start copying
 ################ 
 
 # use nice to be nice with the server :-)
-echo "Copying files to work directory ..."
+echo "Copying files to work directory ..." >> $logfile
 nice -n 19 cp -Rf "$backupdir" "$basedir/work"
 
 # move to the work file and start Archiving nicley 
 cd "$basedir/work"
-echo "Tarring files..."
+echo "Tarring files..." >> $logfile
 nice -n 19 tar -cf $backupname-$suffix.tar *
 archext=tar.$archext
-echo "Compressing files with $archiver..."
+echo "Compressing files with $archiver..." >> $logfile
 nice -n 19 $archiver -9f $backupname-$suffix.tar
 
 ######################################
 ## Move the tars to the storage folder 
 ######################################
 
-echo "Moving Files to the Final destination "
+echo "Moving Files to the Final destination " >> $logfile
 mv $backupname-$suffix.$archext $basedir/local
 
 ## Delete the old stuff!
 if [ -e "$basedir/local/$backupname-$oldthing.$archext" ]; then
-	echo "Deleting old data..."
+	echo "Deleting old data..." >> $logfile
 	rm -rf "$basedir/local/$backupname-$oldthing.$archext"
-	echo "Deleting old links"
+	echo "Deleting old links" >> $logfile
 	rm -rf "$basedir/latest/$backupname-$suffix.$archext"
 fi
 ## cleanup the temp files and exit
 rm -rf $basedir/work
-echo "Done!"
+echo "Done!" >> $logfile
 ## Link the latest backup file
 if [ ! -d $basedir/latest ]; then 
-	echo "creating latest directory"
+	echo "creating latest directory" >> $logfile
 	mkdir -p $basedir/latest
 fi
-echo "Linking files"
+echo "Linking files" >> $logfile
+## checking for previous created links 
+if [ ! -d "$basedir/latest/$backupname-$suffix.$archext" ]; then 
+	echo " Link is alreday existes some thing is wrong !!" >> $logfile
+	echo " make sure that the old link is deleted" >> $logfile
+else
 ln -s "$basedir/local/$backupname-$suffix.$archext" "$basedir/latest/$backupname-$suffix.$archext"
+fi
 ### check for status and relase the lock file 
 if [ $? == 0 ]; then 
 rm -rf $lockfile
