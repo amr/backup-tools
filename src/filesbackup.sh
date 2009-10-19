@@ -7,18 +7,16 @@
 #  * Use `mail` instead of `mutt`
 #  * Rotate using timestamps comparison. Brainstorm:
 #     ls | while read entry; do date=`echo $entry | cut -d'-' -f2-4 | cut -d'.' -f1`; date --date "$date" +%s | sort -n; done | head -n1 | awk '{ print strftime("%F", $0); }'
-#  * Create a directory called "latest/" which always contains the most recent copy
-#  * Link the latest file instead of copying it
 ################################################
 
 #############
 ## Variables
 #############
-basedir="/home/backup"			# Main backup directory [ Destination ]
+basedir="/home/ahmadsaif/backup"			# Main backup directory [ Destination ]
 
 backupname="projectname"		# Backup file name [ Project name ]
 
-backupdir="/var/www/"			# Directory to backup [ Source ]
+backupdir="/home/ahmadsaif/workspace"			# Directory to backup [ Source ]
 
 #For how long do you want to keep the backups 
 # days, weeks, months,etc keep="10 days"
@@ -29,9 +27,9 @@ archiver="gzip"
 #extend the files names with time stamp and other things 
 suffix=`date +%F`
 olddir=`date --date "$keep ago" +%F`
-
+oldthing=$(cd "$basedir/local/" && ls | while read entry; do difdate=`echo $entry | cut -d'-' -f2-4 | cut -d'.' -f1`; date --date "$difdate" +%s | sort -n; done | head -n1 | awk '{ print strftime("%F", $0); }')
 ### notify admin
-admin="ahmed.saif@egyptdc.com" # if more than one admin seperate e-mails with (,) 
+admin="somebody@egyptdc.com" # if more than one admin seperate e-mails with (,) 
 
 #########################################################################
 #########################################################################
@@ -93,17 +91,27 @@ nice -n 19 $archiver -9f $backupname-$suffix.tar
 ######################################
 ## Move the tars to the storage folder 
 ######################################
+
 echo "Moving Files to the Final destination "
 mv $backupname-$suffix.$archext $basedir/local
 
 ## Delete the old stuff!
-if [ -e "$basedir/local/$backupname-$olddir.$archext" ]; then
+if [ -e "$basedir/local/$backupname-$oldthing.$archext" ]; then
 	echo "Deleting old data..."
-	rm -rf "$basedir/local/$backupname-$olddir.$archext"
+	rm -rf "$basedir/local/$backupname-$oldthing.$archext"
+	echo "Deleting old links"
+	rm -rf "$basedir/latest/$backupname-$suffix.$archext"
 fi
 ## cleanup the temp files and exit
 rm -rf $basedir/work
 echo "Done!"
+## Link the latest backup file
+if [ ! -d $basedir/latest ]; then 
+	echo "creating latest directory"
+	mkdir -p $basedir/latest
+fi
+echo "Linking files"
+ln -s "$basedir/local/$backupname-$suffix.$archext" "$basedir/latest/$backupname-$suffix.$archext"
 ### check for status and relase the lock file 
 if [ $? == 0 ]; then 
 rm -rf $lockfile
