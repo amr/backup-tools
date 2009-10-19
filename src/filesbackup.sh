@@ -106,24 +106,22 @@ if [ $count -lt $keep ]; then
 	echo "nothing to rotate"
 else
 	echo "rotating"
-
-
-
-
+fi
 
 ## Delete the old stuff!
 if [ -e "$basedir/local/$backupname-$oldthing.$archext" ]; then
 	if [ $count -lt $keep ]; then
-		        echo "nothing to rotate"
-		else
-			echo "rotating"
+	        echo "nothing to rotate"
+	else
+		echo "rotating"
 
-			echo "Deleting old data..." >> $logfile
-			rm -rf "$basedir/local/$backupname-$oldthing.$archext"
-			echo "Deleting old links" >> $logfile
-			rm -rf "$basedir/latest/$backupname-$suffix.$archext"
+		echo "Deleting old data..." >> $logfile
+		rm -rf "$basedir/local/$backupname-$oldthing.$archext"
+		echo "Deleting old links" >> $logfile
+		rm -rf "$basedir/latest/$backupname-$suffix.$archext"
+	fi
 fi
-fi
+
 ## cleanup the temp files and exit
 rm -rf $basedir/work
 echo "Done!" >> $logfile
@@ -132,6 +130,7 @@ if [ ! -d $basedir/latest ]; then
 	echo "creating latest directory" >> $logfile
 	mkdir -p $basedir/latest
 fi
+
 echo "Linking files" >> $logfile
 ## checking for previous created links 
 if [ ! -d "$basedir/latest/$backupname-$suffix.$archext" ]; then 
@@ -140,6 +139,7 @@ if [ ! -d "$basedir/latest/$backupname-$suffix.$archext" ]; then
 else
 ln -s "$basedir/local/$backupname-$suffix.$archext" "$basedir/latest/$backupname-$suffix.$archext"
 fi
+
 ### check for status and relase the lock file 
 if [ $? == 0 ]; then 
 rm -rf $lockfile
