@@ -3,41 +3,20 @@
 # EDC Files Backup Script 
 # Author : Ahmad Saif <ahmed.saif@egyptdc.com>
 ################################################
-
-#############
-## Variables
-#############
-basedir="/home/ahmadsaif/backup"                        # Main backup directory [ Destination ]
-
-backupname="projectname"                # Backup file name [ Project name ]
-
-backupdir="/home/ahmadsaif/workspace"                   # Directory to backup [ Source ]
-keep="10"		#how long to keep backupfiles for example 10 days = 10
-LOG="$basedir/backup.log"
-ERR="$basedir/backup_error.log"
-# Archiver to use (bzip2 or gzip) prefare to be gzip
-archiver="gzip"
-#extend the files names with time stamp and other things 
-suffix=`date +%F`
-### notify admin
-admin="somebody@egyptdc.com" # if more than one admin seperate e-mails with (,) 
-
-#########################################################################
-#########################################################################
-## The main programe you don't need to edit under this line 
-#########################################################################
-#########################################################################
+. files.conf	#read the config
+LOG="$basedir/backup.log"	#log file
+ERR="$basedir/backup_error.log" #erro log file
+suffix=`date +%F`		#extend the files names with time stamp and other things 
 #redirect output and errores 
-touch $LOG
-exec 6>&1           # Link file descriptor #6 with stdout.
-                    # Saves stdout.
-exec > $LOG         # stdout replaced with file $LOGFILE.
-touch $ERR
-exec 7>&2           # Link file descriptor #7 with stderr.
-                    # Saves stderr.
-exec 2> $ERR        # stderr replaced with file $LOGERR.
-# Create lock file to prevent multi run 
-lockfile="$basedir/backup.lock"
+touch $LOG	    		# create log file
+exec 6>&1           		# Link file descriptor #6 with stdout.
+                    		# Saves stdout.
+exec > $LOG         		# stdout replaced with file $LOGFILE.
+touch $ERR	    		# create error log file
+exec 7>&2           		# Link file descriptor #7 with stderr.
+                    		# Saves stderr.
+exec 2> $ERR        		# stderr replaced with file $LOGERR.
+lockfile="$basedir/backup.lock"	# Create lock file to prevent multi run 
 # Create the extension for the archiver based on the Archiving type
 if [ "$archiver" == "bzip2" ]; then
 	archext="bz2"
@@ -79,6 +58,15 @@ if [ ! -d "$basedir/work" ]; then
 	echo "Creating $basedir/work..." 
 	mkdir "$basedir/work"
 fi
+#redirect output and errores 
+touch $LOG                      # create log file
+exec 6>&1                       # Link file descriptor #6 with stdout.
+                                # Saves stdout.
+exec > $LOG                     # stdout replaced with file $LOGFILE.
+touch $ERR                      # create error log file
+exec 7>&2                       # Link file descriptor #7 with stderr.
+                                # Saves stderr.
+exec 2> $ERR                    # stderr replaced with file $LOGERR.
 ################
 ## start copying
 ################ 
@@ -128,7 +116,7 @@ exec 1>&7 7>&-      # Restore stdout and close file descriptor #7.
 ###Check for status and relase the lock file
 if [ $? == 0 ]; then
 	rm -rf $lockfile
-	echo "Backup for $backupname Done correctly at $suffix" | mutt -s "Backup Done!" $admin
+	mail -s "Backup Done!" $admin < "$LOG"
 else
-	echo "Backup for $backupname Failed at $suffix" | mutt -s "!!Backup Failed!!" $admin
+	mail -s "!!Backup Failed!!" $admin < "$ERR"
 fi
