@@ -13,6 +13,8 @@ backupname="projectname"                # Backup file name [ Project name ]
 
 backupdir="/home/ahmadsaif/workspace"                   # Directory to backup [ Source ]
 keep="10"		#how long to keep backupfiles for example 10 days = 10
+LOG="$basedir/backup.log"
+ERR="$basedir/backup_error.log"
 # Archiver to use (bzip2 or gzip) prefare to be gzip
 archiver="gzip"
 #extend the files names with time stamp and other things 
@@ -25,12 +27,17 @@ admin="somebody@egyptdc.com" # if more than one admin seperate e-mails with (,)
 ## The main programe you don't need to edit under this line 
 #########################################################################
 #########################################################################
-#Create time lock to prevent mutli run on the same day
-timelock="$basedir/`date +%F`.lock"
+#redirect output and errores 
+touch $LOG
+exec 6>&1           # Link file descriptor #6 with stdout.
+                    # Saves stdout.
+exec > $LOG         # stdout replaced with file $LOGFILE.
+touch $ERR
+exec 7>&2           # Link file descriptor #7 with stderr.
+                    # Saves stderr.
+exec 2> $ERR        # stderr replaced with file $LOGERR.
 # Create lock file to prevent multi run 
 lockfile="$basedir/backup.lock"
-#create log file .. 
-logfile="$basedir/backup.log"
 # Create the extension for the archiver based on the Archiving type
 if [ "$archiver" == "bzip2" ]; then
 	archext="bz2"
@@ -46,34 +53,31 @@ if [ ! -d "$basedir" ]; then
 	echo "Creating the BASE DIRECTORY $basedir"
 	mkdir -p "$basedir"
 fi
-
+# check for The local backup directory and create it 
+if [ ! -d "$basedir/local" ]; then
+        echo "Creating $basedir/local..."
+        mkdir "$basedir/local"
+fi
 #################
 ##Check Status
 #################
-#checking if already run this day
-if [ ! -e "$timelock" ]; then
-	touch "$timelock"
+#checking if today backup exist 
+todayback=$basedir/local/$backupname-$suffix.$archext
+if [ -s $todayback ]; then
+	echo "Backup for today `date +%F` have been done .. will exit" && exit 1
 else 
-	echo "Backup for today `date +%F` have been done .. will exit" >> $logfile && exit 1
+	echo "Nothing have been backedup yet, procceding to backup"
 fi
-
 #checking for already running process 
 if [ ! -e "$lockfile" ]; then
 	touch "$lockfile"
 else 
-	echo "Backup is already running" >>$logfile && exit 1
+	echo "Backup is already running" && exit 1
 fi
-##################
 #check for The work directory and create it 
 if [ ! -d "$basedir/work" ]; then
 	echo "Creating $basedir/work..." 
 	mkdir "$basedir/work"
-fi
-
-# check for The local backup directory and create it 
-if [ ! -d "$basedir/local" ]; then
-	echo "Creating $basedir/local..."
-	mkdir "$basedir/local"
 fi
 ################
 ## start copying
@@ -117,10 +121,14 @@ ls "$basedir/latest" | sort -rn | sed -e ''1,"$keep"d'' | xargs -i rm -rf {}
 ######################
 echo "Cleaning up the temprory files .."
 rm -rf $basedir/work
+#Clean up IO redirection
+exec 1>&6 6>&-      # Restore stdout and close file descriptor #6.
+exec 1>&7 7>&-      # Restore stdout and close file descriptor #7.
+
 ###Check for status and relase the lock file
 if [ $? == 0 ]; then
 	rm -rf $lockfile
-	echo "Backup for $backupname Done correctly at $suffix" | mutt -s "Backup Done !" $admin
+	echo "Backup for $backupname Done correctly at $suffix" | mutt -s "Backup Done!" $admin
 else
 	echo "Backup for $backupname Failed at $suffix" | mutt -s "!!Backup Failed!!" $admin
 fi
