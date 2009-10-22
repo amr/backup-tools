@@ -32,7 +32,6 @@ fi
 ##Check Status
 #################
 #checking if today backup exist 
-echo "$basedir/local/$backupname-$suffix.tar.$archext"
 if [ -f "$basedir/local/$backupname-$suffix.tar.$archext" ]; then
 	echo "Backup for today `date +%F` have been done .. will exit" && exit 1
 else 
