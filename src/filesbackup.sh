@@ -1,13 +1,12 @@
 #!/bin/bash
 ###############################################
 # EDC Files Backup Script 
-# Author : Ahmad Saif <ahmed.saif@egyptdc.com>
+#for configuration please use files.conf 
+#Author : Ahmad Saif <ahmed.saif@egyptdc.com>
 ################################################
 . files.conf				#read the config
-LOG="/home/ahmadsaif/backup.log"	#log file
-ERR="/home/ahmadsaif/backup_error.log" #error log file
-suffix=`date +%F`		#extend the files names with time stamp and other things 
-lockfile="$basedir/backup.lock"	# Create lock file to prevent multi run 
+suffix=`date +%F`			#extend the files names with time stamp and other things 
+lockfile="$basedir/backup.lock"		# Create lock file to prevent multi run 
 # Create the extension for the archiver based on the Archiving type
 if [ "$archiver" == "bzip2" ]; then
 	archext="bz2"
@@ -91,17 +90,17 @@ ln -sf "$basedir/local/$backupname-$suffix.$archext" "$basedir/latest/$backupnam
 ## Rotating Files 
 ##################
 #rotating backups
-ls "$basedir/local" | sort -rn | sed -e ''1,"$keep"d'' | xargs -i rm -rf {}
+cd $basedir/local && ls | sort -rn | sed -e ''1,"$keep"d'' | xargs -i rm -rf {}
 #rotating links
-ls "$basedir/latest" | sort -rn | sed -e ''1,"$keep"d'' | xargs -i rm -rf {}
+cd $basedir/latest && ls | sort -rn | sed -e ''1,"$keep"d'' | xargs -i rm -rf {}
 ######################
 ## Clean up temp files
 ######################
 echo "Cleaning up the temprory files .."
 rm -rf $basedir/work
 #Clean up IO redirection
-exec 1>&6 6>&-      # Restore stdout and close file descriptor #6.
-exec 1>&7 7>&-      # Restore stdout and close file descriptor #7.
+#exec 1>&6 6>&-      # Restore stdout and close file descriptor #6.
+#exec 1>&7 7>&-      # Restore stdout and close file descriptor #7.
 
 ###Check for status and relase the lock file
 if [ $? == 0 ]; then
