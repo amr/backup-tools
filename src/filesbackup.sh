@@ -92,15 +92,15 @@ ln -sf "$basedir/local/$backupname-$suffix.$archext" "$basedir/latest/$backupnam
 #rotating backups
 cd $basedir/local && ls | sort -rn | sed -e ''1,"$keep"d'' | xargs -i rm -rf {}
 #rotating links
-cd $basedir/latest && ls | sort -rn | sed -e ''1,"$keep"d'' | xargs -i rm -rf {}
+cd $basedir/latest && ls | sort -rn | sed -e '1d' | xargs -i rm -rf {}
 ######################
 ## Clean up temp files
 ######################
 echo "Cleaning up the temprory files .."
 rm -rf $basedir/work
 #Clean up IO redirection
-#exec 1>&6 6>&-      # Restore stdout and close file descriptor #6.
-#exec 1>&7 7>&-      # Restore stdout and close file descriptor #7.
+exec 1>&6 6>&-      # Restore stdout and close file descriptor #6.
+exec 1>&7 7>&-      # Restore stdout and close file descriptor #7.
 
 ###Check for status and relase the lock file
 if [ $? == 0 ]; then
