@@ -3,19 +3,10 @@
 # EDC Files Backup Script 
 # Author : Ahmad Saif <ahmed.saif@egyptdc.com>
 ################################################
-. files.conf	#read the config
-LOG="$basedir/backup.log"	#log file
-ERR="$basedir/backup_error.log" #erro log file
+. files.conf				#read the config
+LOG="/home/ahmadsaif/backup.log"	#log file
+ERR="/home/ahmadsaif/backup_error.log" #error log file
 suffix=`date +%F`		#extend the files names with time stamp and other things 
-#redirect output and errores 
-touch $LOG	    		# create log file
-exec 6>&1           		# Link file descriptor #6 with stdout.
-                    		# Saves stdout.
-exec > $LOG         		# stdout replaced with file $LOGFILE.
-touch $ERR	    		# create error log file
-exec 7>&2           		# Link file descriptor #7 with stderr.
-                    		# Saves stderr.
-exec 2> $ERR        		# stderr replaced with file $LOGERR.
 lockfile="$basedir/backup.lock"	# Create lock file to prevent multi run 
 # Create the extension for the archiver based on the Archiving type
 if [ "$archiver" == "bzip2" ]; then
@@ -41,8 +32,8 @@ fi
 ##Check Status
 #################
 #checking if today backup exist 
-todayback=$basedir/local/$backupname-$suffix.$archext
-if [ -s $todayback ]; then
+echo "$basedir/local/$backupname-$suffix.tar.$archext"
+if [ -f "$basedir/local/$backupname-$suffix.tar.$archext" ]; then
 	echo "Backup for today `date +%F` have been done .. will exit" && exit 1
 else 
 	echo "Nothing have been backedup yet, procceding to backup"
