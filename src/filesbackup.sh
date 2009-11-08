@@ -98,6 +98,12 @@ cd $basedir/latest && ls | sort -rn | sed -e '1d' | xargs -i rm -rf {}
 ######################
 echo "Cleaning up the temprory files .."
 rm -rf $basedir/work
+############################
+## Sending to remote server
+############################
+echo " sending files to remote server "
+scp "$basedir/local/$backupname-$suffix.$archext" "$bcuser"@"$bcserver":/home/backup
+###########
 #Clean up IO redirection
 exec 1>&6 6>&-      # Restore stdout and close file descriptor #6.
 exec 1>&7 7>&-      # Restore stdout and close file descriptor #7.
