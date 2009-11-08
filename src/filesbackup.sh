@@ -102,7 +102,7 @@ rm -rf $basedir/work
 ## Sending to remote server
 ############################
 echo " sending files to remote server "
-scp "$basedir/local/$backupname-$suffix.$archext" "$bcuser"@"$bcserver":/home/backup
+rsync -avzr -e "rsynckey" "$basedir/local" "$bcuser"@"$bcserver":"$remotedir"
 ###########
 #Clean up IO redirection
 exec 1>&6 6>&-      # Restore stdout and close file descriptor #6.
