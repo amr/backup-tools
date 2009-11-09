@@ -59,7 +59,6 @@ exec 2> $ERR                    # stderr replaced with file $LOGERR.
 ################
 ## start copying
 ################ 
-
 # use nice to be nice with the server :-)
 echo "Copying files to work directory ..."
 nice -n 19 cp -Rf "$backupdir" "$basedir/work"
@@ -78,6 +77,7 @@ nice -n 19 $archiver -9f $backupname-$suffix.tar
 ## Moving Files
 echo "Moving Files to the Final destination .."
 mv $backupname-$suffix.$archext $basedir/local
+
 ####Linking####
 ##check for the latest directroy
 if [ ! -d $basedir/latest ]; then
@@ -86,6 +86,7 @@ if [ ! -d $basedir/latest ]; then
 fi
 ##link the files
 ln -sf "$basedir/local/$backupname-$suffix.$archext" "$basedir/latest/$backupname-$suffix.$archext"
+
 ##################
 ## Rotating Files 
 ##################
@@ -93,17 +94,19 @@ ln -sf "$basedir/local/$backupname-$suffix.$archext" "$basedir/latest/$backupnam
 cd $basedir/local && ls | sort -rn | sed -e ''1,"$keep"d'' | xargs -i rm -rf {}
 #rotating links
 cd $basedir/latest && ls | sort -rn | sed -e '1d' | xargs -i rm -rf {}
+
 ######################
 ## Clean up temp files
 ######################
 echo "Cleaning up the temprory files .."
 rm -rf $basedir/work
+
 ############################
 ## Sending to remote server
 ############################
 echo " sending files to remote server "
-rsync -avzr -e "rsynckey" "$basedir/local" "$bcuser"@"$bcserver":"$remotedir"
-###########
+`rsync -avzr -e "ssh -i "rsynckey"" "$basedir/local" "$bcuser"@"$bcserver":"$remotedir"`
+
 #Clean up IO redirection
 exec 1>&6 6>&-      # Restore stdout and close file descriptor #6.
 exec 1>&7 7>&-      # Restore stdout and close file descriptor #7.
