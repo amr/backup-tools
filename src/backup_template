@@ -12,24 +12,25 @@
 # only once in all the templates ..
 #########################################################
 #
-. /home/ahmadsaif/workspace/masterback.sh
 # project name:
-$Prj_name="suzarian"
+Prj_name="suzarian"
 # Project Directories to backup:
-$Prj_dirs="/home/ahmadsaif/Stars"
+Prj_dirs="/home/ahmadsaif/Stars"
 # Mysql user prefare to be root :
-$Prj_msql_user="root"
+Prj_msql_user="root"
 # Mysql user password:
-$Prj_mysql_pass="root"
+Prj_mysql_pass="root"
 # Mysql data base:
-$Prj_mysql_dbs="bacula"
+Prj_mysql_dbs="bacula"
 # The backup destination dir:
-$Back_dir="/home/ahmadsaif/backup"
+Back_dir="/home/ahmadsaif/backup"
 # your server key [ if your server is ubuntu it must be a dsa key ]:
-$Rsync_key="/home/ahmadsaif/mybeloveinkey"
+Rsync_key="/home/ahmadsaif/mybeloveinkey"
 # The remote backup server:
-$Back_server="172.16.3.15"
+Back_server="172.16.3.15"
 # The remote user on the Backup server
-$Back_user="ahmad"
+Back_user="ahmad"
 # The remote backup destination on the Backup server
-$Remot_dir="/home/backup"
+Remot_dir="/home/backup"
+
+. /home/ahmadsaif/workspace/masterback.sh
