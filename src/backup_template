@@ -14,13 +14,13 @@
 #
 # project name:
 Prj_name="suzarian"
-# Project Directories to backup:
+# Project Directories to backup separate with a single space:
 Prj_dirs="/home/ahmadsaif/Stars"
 # Mysql user prefare to be root :
-Prj_msql_user="root"
+Prj_mysql_user="root"
 # Mysql user password:
 Prj_mysql_pass="root"
-# Mysql data base:
+# Mysql data base separate with a single space:
 Prj_mysql_dbs="bacula"
 # The backup destination dir:
 Back_dir="/home/ahmadsaif/backup"
