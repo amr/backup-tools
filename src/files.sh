@@ -2,6 +2,6 @@
 ##############
 #Tarring files
 ##############
-tar -czf $1.tar.gz $1
-echo $1.tar.gz
-exit 0
+xargs tar -czf $1.tar.gz
+&& echo $1.tar.gz
+&& exit 0
