@@ -1,7 +1,12 @@
 #!/bin/sh
 ###############
-#Dumping the db
+# Dumping the db
 ###############
-$Suffix=$Prj_name.`date +%F`
-mysqldump -u$Prj_msql_user -p$Prj_mysql_pass $Prj_mysql_dbs | `gzip -9` > $Back_dir/$Suffix.sql.gz
-exit 0
+
+# Test for credentials
+# TODO: Check for existence of databases
+echo SHOW DATABASES | mysql -u$Prj_mysql_user -p$Proj_mysql_pass || exit 1
+
+for db in $Prj_mysql_dbs;
+	do mysqldump -u$Prj_mysql_user -p$Prj_mysql_pass $db | gzip > $Back_dir/$Suffix.DB-$db.sql.gz && echo $Back_dir/$Suffix.DB-$db.sql.gz;
+done && exit 0
