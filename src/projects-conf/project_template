@@ -24,7 +24,7 @@ cd $ROOT_DIR
 . projects-conf/defaults
 
 ###
-# Project name
+# Project name. Should only contain alpha numeric characters
 PROJECT_NAME=""
 
 ###
