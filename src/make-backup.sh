@@ -54,7 +54,7 @@ function validate() {
 
 # Send out the e-mail notification
 function mail_report() {
-	mail -s "$PROJECT_NAME backup report for `date +%F`: $1" $PROJECT_OWNERS < $LOG
+	mail -s "$PROJECT_NAME backup report for `date +%F`: $1" -a "From: Backup Tools <noreply@`hostname`>" $PROJECT_OWNERS < $LOG
 }
 
 ###
@@ -65,41 +65,41 @@ validate
 # Backup files
 FILES=$(echo "$PROJECT_DIRECTORIES" | toolbox/files.sh "$LOCAL_BACKUP_DIRECTORY/$PROJECT_NAME.files")
 if [ $? == 0 ]; then 
-	info "Your files have been backed up correctly"
+	info "Successfully prepared files"
 else 
-	fatal_error "Something is wrong please check your Files configuration"
+	fatal_error "Could not backup your files. Please check your project configuration"
 fi
 
 ###
 # Backup MySQL
 DATABASES=$(env PROJECT_MYSQL_DATABASES="$PROJECT_MYSQL_DATABASES" MYSQL_USER="$MYSQL_USER" MYSQL_PASSWORD="$MYSQL_PASSWORD" PROJECT_NAME="$PROJECT_NAME" LOCAL_BACKUP_DIRECTORY="$LOCAL_BACKUP_DIRECTORY" toolbox/mysql.sh)
 if [ $? == 0 ]; then 
-	info "Your DataBase have been Backed up correctly"
+	info "Successfully prepared database(s)"
 else 
-	fatal_error "Something is wrong please check your DataBase configuration"
+	fatal_error "Could not backup your database(s). Please check your project configuration"
 fi
 
 ###
 # Create backup package
 cd "$LOCAL_BACKUP_DIRECTORY" && mkdir "$BACKUP_ID" && mv $FILES $DATABASES "$BACKUP_ID/"
 if [ $? == 0 ]; then 
-	info "Your project has been backed up correctly"
+	info "A snapshot of your project files + database(s) has been correctly prepared"
 else 
-	fatal_error "Something is wrong please contact the backup administrator"
+	fatal_error "Could not prepare a final snapshot. Please check your project configuration"
 fi
 
 ###
 # Report backup size
-info "Your backup size is `du -hs $BACKUP_ID | awk '{ print $1 }'`"
+info "Total backup size is `du -hs $BACKUP_ID | awk '{ print $1 }'`"
 
 ###
 # Push to remote server
-#rsync -avzr -e ssh "$BACKUP_ID.tar.gz" "$REMOTE_BACKUP_USER"@"$REMOTE_BACKUP_HOST":"$REMOTE_BACKUP_DIRECTORY"
-#if [ $? == 0 ]; then 
-#	info "Your Backup have been sent correctly to the backup server ($REMOTE_BACKUP_HOST) "
-#else 
-#	fatal_error "Your backup didn't reach the backup server. Please contact the backup administrator"
-#fi
+rsync -avzr -e ssh "$BACKUP_ID" "$REMOTE_BACKUP_USER"@"$REMOTE_BACKUP_HOST":"$REMOTE_BACKUP_DIRECTORY/$PROJECT_NAME/"
+if [ $? == 0 ]; then 
+	info "A backup of $PROJECT_NAME has been sent correctly to the backup server ($REMOTE_BACKUP_HOST) and stored as: $REMOTE_BACKUP_DIRECTORY/$PROJECT_NAME/$BACKUP_ID"
+else 
+	fatal_error "Your backup didn't reach the backup server. Please contact the backup administrator immediately"
+fi
 
 # Send report
 info "Sending backup log to: $PROJECT_OWNERS"
