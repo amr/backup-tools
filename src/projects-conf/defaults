@@ -1,0 +1,31 @@
+# Part of backup-tools
+#
+# Default configuration for projects backup
+# 
+
+###
+# MySQL username
+MYSQL_USER=""
+
+###
+# MySQL password
+MYSQL_PASSWORD=""
+
+###
+# Backup destination
+#
+# Example:
+# BACKUP_LOCAL_DIRECTORY="/backup"
+LOCAL_BACKUP_DIRECTORY=""
+
+###
+# IP or domain of the remote backup server
+REMOTE_BACKUP_HOST=""
+
+###
+# The remote user on the backup server
+REMOTE_BACKUP_USER=""
+
+###
+# The remote backup destination on the backup server
+REMOTE_BACKUP_DIRECTORY=""

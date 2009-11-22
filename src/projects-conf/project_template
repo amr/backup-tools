@@ -1,0 +1,51 @@
+#!/bin/sh
+# Part of backup-tools
+#
+# Backup configuration template for projects
+#
+# To use it:
+# 
+# 1. Copy it inside projects-conf/<your-project-name> (no extension)
+# 2. Review & change all the variables below
+# 3. Make it executable: chmod +x projects-config/<your-project-name>
+# 4. Execute it and verify that your project has been backed up successfully
+
+##############################################################################
+# CONFIGURATION VARIABLES
+##############################################################################
+#
+# Load the defaults
+. defaults
+
+###
+# Project name
+PROJECT_NAME=""
+
+###
+# Project directories to backup, space separated
+#
+# If a directory contains a space it must be escaped. Example:
+#
+#   PROJECT_DIRECTORIES="/path/to/dir1 /path/to/dir\ 2\ with\ spaces /path/to/dir3"
+#
+PROJECT_DIRECTORIES=""
+
+###
+# MySQL databases to backup, space separated
+#
+# Example:
+# PROJECT_MYSQL_DATABASES="hawaa_world jawaly cas"
+PROJECT_MYSQL_DATABASES=""
+
+###
+# E-mails of project owners, space separated
+#
+# Example
+# PROJECT_OWNERS="first.person@egyptdc.com second.person@egyptdc.com"
+PROJECT_OWNERS=""
+
+##############################################################################
+# MAIN
+##############################################################################
+
+. make-backup.sh
