@@ -18,6 +18,9 @@ A WORD ON THE FEATURE-SET
 INSTALLATION
 ============
 
+  Installation should be performed by, or coordinateed with, the administrator
+  of the remote backup server.
+
   1. Copy the backup-tools package somewhere in the system.
 
   2. Open backup-tools/projects-conf/default and provide ALL parameters. They
@@ -34,6 +37,9 @@ INSTALLATION
 
 ADD A PROJECT
 =============
+
+  Any project owner can add a project under backup-tools to be backed up on the
+  remote server. No action from the remote backup administrator is required.
 
   1. Create a configuration file under backup-tools/projects-conf. You should
      do so by copying the existing project_template file. Example:
