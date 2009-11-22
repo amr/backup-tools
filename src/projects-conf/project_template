@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Part of backup-tools
 #
 # Backup configuration template for projects
@@ -11,12 +11,17 @@
 # 3. Make it executable: chmod +x projects-config/<your-project-name>
 # 4. Execute it and verify that your project has been backed up successfully
 
+##
+# Goto backup-tools root directory
+ROOT_DIR=`dirname $0`/..
+cd $ROOT_DIR
+
 ##############################################################################
 # CONFIGURATION VARIABLES
 ##############################################################################
 #
 # Load the defaults
-. defaults
+. projects-conf/defaults
 
 ###
 # Project name
