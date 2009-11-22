@@ -63,7 +63,7 @@ validate
 
 ###
 # Backup files
-echo "$PROJECT_DIRECTORIES" | ./files.sh "$LOCAL_BACKUP_DIRECTORY/$PROJECT_NAME.files" 2>/dev/null
+echo "$PROJECT_DIRECTORIES" | toolbox/files.sh "$LOCAL_BACKUP_DIRECTORY/$PROJECT_NAME.files" 2>/dev/null
 if [ $? == 0 ]; then 
 	log "Your files have been backed up correctly"
 else 
@@ -72,7 +72,7 @@ fi
 
 ###
 # Backup MySQL
-env PROJECT_MYSQL_DATABASES="$PROJECT_MYSQL_DATABASES" MYSQL_USER="$MYSQL_USER" MYSQL_PASSWORD="$MYSQL_PASSWORD" PROJECT_NAME="$PROJECT_NAME" LOCAL_BACKUP_DIRECTORY="$LOCAL_BACKUP_DIRECTORY" ./mysql.sh
+env PROJECT_MYSQL_DATABASES="$PROJECT_MYSQL_DATABASES" MYSQL_USER="$MYSQL_USER" MYSQL_PASSWORD="$MYSQL_PASSWORD" PROJECT_NAME="$PROJECT_NAME" LOCAL_BACKUP_DIRECTORY="$LOCAL_BACKUP_DIRECTORY" toolbox/mysql.sh
 if [ $? == 0 ]; then 
 	log "Your DataBase have been Backed up correctly"
 else 
