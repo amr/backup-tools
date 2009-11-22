@@ -6,11 +6,6 @@
 # Just copy this file and rename it to what ever you want
 # and change the vars to suite the other project needs
 ########################################################
-# special vars rules:
-# If you have more than one project on the same server
-# Set the Rsync_key, Back_server, Back_user, Remot_dir
-# only once in all the templates ..
-#########################################################
 #
 # project name:
 Prj_name="suzarian"
@@ -29,6 +24,7 @@ Back_server="172.16.3.15"
 # The remote user on the Backup server
 Back_user="ahmad"
 # The remote backup destination on the Backup server
-Remot_dir="/home/backup"
-
+Remote_dir="/home/backup"
+# Your email address to receive the logs 
+Admins="somebody@egyptdc.com"
 . /home/ahmadsaif/workspace/masterback.sh
