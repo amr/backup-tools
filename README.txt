@@ -23,7 +23,8 @@ THEORY OF OPERATION
   directories and databases that will need to be backed up. When the appropriate
   backup-tools script (called run-all.sh) is invoked, it will create a backup
   for each of the configured projects and then send this backup to a remote
-  server where the backups will be archived and rotated.
+  server where the backups will be archived and rotated. An e-mail is sent to
+  project owners informing them of the success or failure of the backup process.
 
 
 INSTALLATION
