@@ -108,7 +108,7 @@ info "Total backup size is `du -hs $BACKUP_ID | awk '{ print $1 }'`"
 
 ###
 # Push to remote server
-rsync -avzr -e ssh "$BACKUP_ID" "$REMOTE_BACKUP_USER"@"$REMOTE_BACKUP_HOST":"$REMOTE_BACKUP_DIRECTORY/$PROJECT_NAME/"
+rsync -av -e ssh "$BACKUP_ID" "$REMOTE_BACKUP_USER"@"$REMOTE_BACKUP_HOST":"$REMOTE_BACKUP_DIRECTORY/$PROJECT_NAME/"
 if [ $? == 0 ]; then 
 	info "A backup of $PROJECT_NAME has been sent correctly to the backup server ($REMOTE_BACKUP_HOST) and stored as: $REMOTE_BACKUP_DIRECTORY/$PROJECT_NAME/$BACKUP_ID"
 else 
