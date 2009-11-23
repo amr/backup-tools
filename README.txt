@@ -44,7 +44,7 @@ INSTALLATION
   4. Add a cronjob to run backup-tools/run-all.sh as frequent as you require.
 
   Now backup-tools has been installed and is ready to be used. The section "ADD
-  A PROJECT" below describes how to add configure it to backup a given project.
+  A PROJECT" below describes how to configure it to backup a given project.
 
 
 ADD A PROJECT
