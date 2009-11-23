@@ -33,7 +33,10 @@ INSTALLATION
   Installation should be performed by, or coordinateed with, the administrator
   of the remote backup server.
 
-  1. Copy the backup-tools package somewhere in the system.
+  1. Copy the backup-tools package somewhere in the system. e.g. To get it
+     directly from git into /usr/local/backup-tools:
+
+     $: git clone gitosis@git.edc:backup-tools.git /usr/local/backup-tools
 
   2. Open backup-tools/projects-conf/default and provide ALL parameters. They
      are all documented inline.
