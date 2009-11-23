@@ -56,6 +56,9 @@ function validate() {
 	for dir in $PROJECT_DIRECTORIES; do
 		test -d "$dir" || fatal_error "Invalid directory specified in PROJECT_DIRECTORIES: $dir"
 	done;
+
+	# Local backup directory
+	test -d "$LOCAL_BACKUP_DIRECTORY" || fatal_error "Invalid directory specified for LOCAL_BACKUP_DIRECTORY: $LOCAL_BACKUP_DIRECTORY"
 }
 
 ###
