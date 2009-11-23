@@ -15,6 +15,17 @@ A WORD ON THE FEATURE-SET
   merged to the base backup-tools.
 
 
+THEORY OF OPERATION
+===================
+
+  Backup-tools will be installed on the real live production servers. A config
+  file will be created for each project, telling backup-tools about the project
+  directories and databases that will need to be backed up. When the appropriate
+  backup-tools script (called run-all.sh) is invoked, it will create a backup
+  for each of the configured projects and then send this backup to a remote
+  server where the backups will be archived and rotated.
+
+
 INSTALLATION
 ============
 
