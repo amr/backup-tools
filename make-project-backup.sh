@@ -1,15 +1,15 @@
 #!/bin/bash
 # Part of backup-tools
 #
-# Makes a backup for a given project configuration
+# Makes a backup of a given project
 #
 # Usage:
 #
-#    ./make-backup.sh projects-conf/<project-name>
+#    ./make-project-backup.sh projects-conf/<project-name>
 #
 # Usage 2:
 #
-#    source projects-conf/<project-name>; ./make-backup.sh
+#    source projects-conf/<project-name>; ./make-project-backup.sh
 #
 
 # Avoid loops

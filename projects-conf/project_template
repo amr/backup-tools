@@ -3,13 +3,18 @@
 #
 # Backup configuration template for projects
 #
-# To use it:
+# Usage instructions:
 # 
-# 1. Make a copy of it with your project name
-#    e.g.  $: cp project_template projects-conf/<your-project-name>
-# 2. Review & change all the variables below
-# 3. Make it executable: chmod +x projects-config/<your-project-name>
-# 4. Execute it and verify that your project has been backed up successfully
+#   1. Make a copy of it with your project name
+#
+#        $: cp project_template projects-conf/<your-project-name>
+#
+#   2. Review & change all the configuration variables below
+#
+#   3. Make it executable: chmod +x projects-config/<your-project-name>
+#
+#   4. Execute it and verify that your project has been backed up correctly
+#
 
 ##
 # Goto backup-tools root directory

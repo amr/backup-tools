@@ -1,1 +1,1 @@
-Projects backup configuration here
+Projects backup configurations should be placed in this directory
