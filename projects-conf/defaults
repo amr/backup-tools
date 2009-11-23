@@ -4,15 +4,23 @@
 # 
 
 ###
-# MySQL username
+# MySQL username which have access to all project databases
 MYSQL_USER=""
 
 ###
-# MySQL password
+# Password for MySQL user above
 MYSQL_PASSWORD=""
 
 ###
-# Backup destination
+# Absolute path to the local backup destination where backup files will be
+# prepared inside and later pushed to the remote server. No trailing slash.
+#
+# Note that this directory is not rotated by default. You can optionally use the
+# rotation utility in remote-utils/rotate.sh but this part is not tested yet. So
+# if it doesn't work feel free to implement the rotation strategy you like. As
+# far as backup-tools is concerned, that directory is only used while preparing
+# the backup snapshot for transferring to the remote server. It's never used or
+# expected to be in any shape after that has been done.
 #
 # Example:
 # BACKUP_LOCAL_DIRECTORY="/backup"
@@ -27,5 +35,14 @@ REMOTE_BACKUP_HOST=""
 REMOTE_BACKUP_USER=""
 
 ###
-# The remote backup destination on the backup server
+# Absolute path to the remote backup destination on the backup server. No
+# trailing slash.
+#
+# This is the remote repository where backups for all projects are kept and
+# rotated. Its rotation should be configured separately (i.e. it's not handled
+# automatically by backup-tools). Check the README.txt section "CONFIGURING THE
+# REMOTE BACKUP SERVER" for more information.
+#
+# Example:
+# REMOTE_BACKUP_DIRECTORY="/backup"
 REMOTE_BACKUP_DIRECTORY=""
