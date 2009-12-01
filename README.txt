@@ -85,7 +85,7 @@ CONFIGURING THE REMOTE BACKUP SERVER
   1. Open remote-utils/rotate.sh and configure the KEEP parameter to the number
      of days you wish to keep.
 
-  2. Add a cron job to run remote-utils/rotate.sh every day.
+  2. Add a cron job to run `remote-utils/rotate.sh <backup-dir>` every day.
 
   You are done!
 
