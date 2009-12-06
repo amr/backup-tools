@@ -38,13 +38,19 @@ INSTALLATION
 
      $: git clone gitosis@git.edc:backup-tools.git /usr/local/backup-tools
 
-  2. Open backup-tools/projects-conf/default and provide ALL parameters. They
+  2. Make sure the following files under backup-tools are executable:
+
+     run-all.sh
+     make-project-backup.sh
+     toolbox/*.sh
+
+  3. Open backup-tools/projects-conf/default and provide ALL parameters. They
      are all documented inline.
 
-  3. Configure a passwordless SSH key for the user which backup-tools cron job
+  4. Configure a passwordless SSH key for the user which backup-tools cron job
      will run under. This key must be authorized on the remote backup server.
 
-  4. Add a cronjob to run backup-tools/run-all.sh as frequent as you require.
+  5. Add a cronjob to run backup-tools/run-all.sh as frequent as you require.
 
   Now backup-tools has been installed and is ready to be used. The section "ADD
   A PROJECT" below describes how to configure it to backup a given project.
