@@ -33,7 +33,10 @@ class RsyncWrapper:
 
     def is_rsync(self, command):
         """Checks whether given command is indeed rsync"""
-        return command.startswith(tuple(self.rsync_bin))
+        for bin in self.rsync_bin:
+            if command.startswith(bin):
+                return True
+        return False
 
     def execute(self):
         """Executes the rsync command and returns its return value"""
