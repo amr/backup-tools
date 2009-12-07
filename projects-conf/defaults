@@ -16,14 +16,14 @@ MYSQL_PASSWORD=""
 # prepared inside and later pushed to the remote server. No trailing slash.
 #
 # Note that this directory is not rotated by default. You can optionally use the
-# rotation utility in remote-utils/rotate.sh but this part is not tested yet. So
+# rotation utility in utilities/rotate.sh but this part is not tested yet. So
 # if it doesn't work feel free to implement the rotation strategy you like. As
 # far as backup-tools is concerned, that directory is only used while preparing
 # the backup snapshot for transferring to the remote server. It's never used or
 # expected to be in any shape after that has been done.
 #
 # Example:
-# BACKUP_LOCAL_DIRECTORY="/backup"
+# LOCAL_BACKUP_DIRECTORY="/backup"
 LOCAL_BACKUP_DIRECTORY=""
 
 ###
