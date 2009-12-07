@@ -68,7 +68,7 @@ validate
 ###
 # Unique ID for today's backup
 BACKUP_ID="$PROJECT_NAME.`date +%F.%s`"
-info "Backup ID: $BACUP_ID"
+info "Backup ID: $BACKUP_ID"
 
 ###
 # Log
