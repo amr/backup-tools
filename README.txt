@@ -95,5 +95,17 @@ CONFIGURING THE REMOTE BACKUP SERVER
 
   You are done!
 
+  3. Optional: For better security, you may add the following restrictions to
+     the authorized SSH keys in authorized_keys(8) file:
+
+     command="backup-tools/utilities/rsync-only.py",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty
+
+     Then make sure that `backup-tools/utilities/rsync-only.py` is executable:
+
+     $: chmod +x backup-tools/utilities/rsync-only.py
+
+     This will restrict the commands this key can use to rsync only. For more
+     information, check authorized_keys(8) manpage.
+
 
 Enjoy!
