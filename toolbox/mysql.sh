@@ -6,10 +6,10 @@
 
 # Prepare mysqldump args, this is needed to include only non-empty arguments.
 MYSQLDUMP_OPTS=""
-if [ -z "$MYSQL_USER" ]; then
+if [ -n "$MYSQL_USER" ]; then
 	MYSQLDUMP_OPTS="$MYSQLDUMP_OPTS -u$MYSQL_USER"
 fi;
-if [ -z "$MYSQL_PASSWORD" ]; then
+if [ -n "$MYSQL_PASSWORD" ]; then
 	MYSQLDUMP_OPTS="$MYSQLDUMP_OPTS -p$MYSQL_PASSWORD"
 fi;
 
