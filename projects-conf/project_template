@@ -45,14 +45,18 @@ PROJECT_DIRECTORIES=""
 # MySQL databases to backup, space separated
 #
 # Example:
-# PROJECT_MYSQL_DATABASES="hawaa_world jawaly cas"
+#
+#   PROJECT_MYSQL_DATABASES="hawaa_world jawaly cas"
+#
 PROJECT_MYSQL_DATABASES=""
 
 ###
 # E-mails of project owners, space separated
 #
-# Example
-# PROJECT_OWNERS="first.person@egyptdc.com second.person@egyptdc.com"
+# Example:
+#
+#   PROJECT_OWNERS="first.person@egyptdc.com second.person@egyptdc.com"
+#
 PROJECT_OWNERS=""
 
 ##############################################################################
