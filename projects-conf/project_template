@@ -18,7 +18,13 @@
 
 ##
 # Goto backup-tools root directory
-ROOT_DIR=`dirname $0`/..
+if [ -n "$MAKE_PROJECT_BACKUP" ]; then
+	# We are being run using `make-project-backup.sh`
+	ROOT_DIR=`dirname "$0"`
+else
+	# We are being run directly
+	ROOT_DIR=`dirname "$0"`/..
+fi;
 cd $ROOT_DIR
 
 ##############################################################################
