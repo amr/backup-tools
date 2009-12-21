@@ -53,7 +53,7 @@ function validate() {
 	done
 
 	# MySQL
-	if [ -n "$PROJECT_MYSQL_DATABASES" && -z "$MYSQL_USER" ]; then
+	if [[ -n "$PROJECT_MYSQL_DATABASES" && -z "$MYSQL_USER" ]]; then
 		fatal_error "MYSQL_USER is empty"
 	elif [ -z "$PROJECT_MYSQL_DATABASES" ]; then
 		info "No MySQL databases configured to backup"
