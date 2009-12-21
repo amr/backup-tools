@@ -50,9 +50,29 @@ INSTALLATION
   4. Configure a passwordless SSH key for the user which backup-tools cron job
      will run under. This key must be authorized on the remote backup server.
 
-  5. Add a cronjob to run backup-tools/run-all.sh as frequent as you require.
+  5. Setup rotation of local backup entries. There will be local backup entries
+     of your project(s), you can safely remove them as they have been synced to
+     the remote backup server or you may wish to keep them for added safety.
 
-  6. Optional: For added security, you should secure the projects-conf/defaults
+     For this step, you just need to take a decision. The next step will address
+     how to accomplish the rotation or automatic cleanup of synchronized backup
+     entries.
+
+  6. Add a cronjob to run backup-tools/run-all.sh as frequent as you require and
+     perform cleanup or rotation after it has synchronized the newly created
+     backups.
+
+     (a) If you decided to cleanup all backups (i.e. not keep any backups
+         locally), then your cron command should look like:
+
+         backup-tools/run-all.sh && rm -rf /path/to/backup/*
+
+     (b) If you decided to keep and rotate all backups, then your cron command
+         should look like:
+
+         backup-tools/run-all.sh && backup-tools/utilities/rotate.sh /path/to/backup/dir
+
+  7. Optional: For added security, you should secure the projects-conf/defaults
      file by making it readable by the owner only:
 
      $: chmod 600 backup-tools/projects-conf/defaults
