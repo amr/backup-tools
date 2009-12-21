@@ -46,16 +46,23 @@ function mail_report() {
 
 # Validate run environment
 function validate() {
-	REQUIRED_VARS=(PROJECT_NAME PROJECT_DIRECTORIES PROJECT_MYSQL_DATABASES MYSQL_USER LOCAL_BACKUP_DIRECTORY REMOTE_BACKUP_HOST REMOTE_BACKUP_USER REMOTE_BACKUP_DIRECTORY)
+	REQUIRED_VARS=(PROJECT_NAME PROJECT_DIRECTORIES LOCAL_BACKUP_DIRECTORY REMOTE_BACKUP_HOST REMOTE_BACKUP_USER REMOTE_BACKUP_DIRECTORY)
 	for var in ${REQUIRED_VARS[@]}; do
 		value=$(eval echo $`echo $var`)
 		test -n "$value" || fatal_error "$var is empty"
-	done;
+	done
+
+	# MySQL
+	if [ -n "$PROJECT_MYSQL_DATABASES" && -z "$MYSQL_USER" ]; then
+		fatal_error "MYSQL_USER is empty"
+	elif [ -z "$PROJECT_MYSQL_DATABASES" ]; then
+		info "No MySQL databases configured to backup"
+	fi
 
 	# Project directories
 	for dir in $PROJECT_DIRECTORIES; do
 		test -d "$dir" || fatal_error "Invalid directory specified in PROJECT_DIRECTORIES: $dir"
-	done;
+	done
 
 	# Local backup directory
 	test -d "$LOCAL_BACKUP_DIRECTORY" || fatal_error "Invalid directory specified for LOCAL_BACKUP_DIRECTORY: $LOCAL_BACKUP_DIRECTORY"
@@ -87,11 +94,13 @@ fi
 
 ###
 # Backup MySQL
-DATABASES=$(env PROJECT_MYSQL_DATABASES="$PROJECT_MYSQL_DATABASES" MYSQL_USER="$MYSQL_USER" MYSQL_PASSWORD="$MYSQL_PASSWORD" PROJECT_NAME="$PROJECT_NAME" LOCAL_BACKUP_DIRECTORY="$LOCAL_BACKUP_DIRECTORY" toolbox/mysql.sh)
-if [ $? == 0 ]; then 
-	info "Successfully prepared database(s)"
-else 
-	fatal_error "Could not backup your database(s). Please check your project configuration"
+if [ -n "$PROJECT_MYSQL_DATABASES" ]; then
+	DATABASES=$(env PROJECT_MYSQL_DATABASES="$PROJECT_MYSQL_DATABASES" MYSQL_USER="$MYSQL_USER" MYSQL_PASSWORD="$MYSQL_PASSWORD" PROJECT_NAME="$PROJECT_NAME" LOCAL_BACKUP_DIRECTORY="$LOCAL_BACKUP_DIRECTORY" toolbox/mysql.sh)
+	if [ $? == 0 ]; then 
+		info "Successfully prepared database(s)"
+	else
+		fatal_error "Could not backup your database(s). Please check your project configuration"
+	fi
 fi
 
 ###
