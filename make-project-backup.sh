@@ -17,7 +17,7 @@ test -z "$MAKE_PROJECT_BACKUP" || return;
 MAKE_PROJECT_BACKUP="1"
 
 # Read given project configuration, if any.
-test -a "$1" && cd `dirname "$1"` && source `basename "$1"`
+test -a "$1" && source "$1"
 
 # Print fatal error and exit
 function fatal_error() {
