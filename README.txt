@@ -50,6 +50,15 @@ INSTALLATION
   4. Configure a passwordless SSH key for the user which backup-tools cron job
      will run under. This key must be authorized on the remote backup server.
 
+     You must also approve the remote backup server SSH Fingerprint. You can do
+     this by manually SSH-ing to the remote server at least once from the user
+     account under which backup-tools will run in future. If that account is
+     root, then as root, you will need to SSH like this:
+
+       $: ssh <remote-backup-user>@<remote-backup-host>
+
+     SSH will prompt your to verify and accept the fingerprint. Answer Yes.
+
   5. Setup rotation of local backup entries. There will be local backup entries
      of your project(s), you can safely remove them as they have been synced to
      the remote backup server or you may wish to keep them for added safety.
