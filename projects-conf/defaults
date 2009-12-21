@@ -23,7 +23,9 @@ MYSQL_PASSWORD=""
 # expected to be in any shape after that has been done.
 #
 # Example:
-# LOCAL_BACKUP_DIRECTORY="/backup"
+#
+#   LOCAL_BACKUP_DIRECTORY="/backup"
+#
 LOCAL_BACKUP_DIRECTORY=""
 
 ###
@@ -44,5 +46,20 @@ REMOTE_BACKUP_USER=""
 # REMOTE BACKUP SERVER" for more information.
 #
 # Example:
-# REMOTE_BACKUP_DIRECTORY="/backup"
+#
+#   REMOTE_BACKUP_DIRECTORY="/backup"
+#
 REMOTE_BACKUP_DIRECTORY=""
+
+###
+# Remote Shell
+#
+# You may specify the command to use to get a remote shell on the backup server.
+#
+# The default is "ssh", but you may expand it to include more options.
+#
+# Example (specifies port 912 instead of the default, 22):
+#
+#   REMOTE_BACKUP_SHELL="ssh -p 912"
+#
+REMOTE_BACKUP_SHELL="ssh"
