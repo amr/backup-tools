@@ -52,6 +52,11 @@ INSTALLATION
 
   5. Add a cronjob to run backup-tools/run-all.sh as frequent as you require.
 
+  6. Optional: For added security, you should secure the projects-conf/defaults
+     file by making it readable by the owner only:
+
+     $: chmod 600 backup-tools/projects-conf/defaults
+
   Now backup-tools has been installed and is ready to be used. The section "ADD
   A PROJECT" below describes how to configure it to backup a given project.
 
