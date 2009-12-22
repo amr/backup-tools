@@ -1,12 +1,12 @@
-INTRODUCTION
-============
+1. INTRODUCTION
+===============
 
   backup-tools is an organized set of tools developed here in EDC for being used
   by projects for backing up their data to a remote server.
 
 
-A WORD ON THE FEATURE-SET
-=========================
+2. A WORD ON THE FEATURE-SET
+============================
 
   backup-tools is not intended to be a one-size-fits-all solution, but rather,
   implements the common needs of projects. Should a project need more features
@@ -15,8 +15,8 @@ A WORD ON THE FEATURE-SET
   merged to the base backup-tools.
 
 
-THEORY OF OPERATION
-===================
+3. THEORY OF OPERATION
+======================
 
   Backup-tools will be installed on the real live production servers. A config
   file will be created for each project, telling backup-tools about the project
@@ -27,8 +27,8 @@ THEORY OF OPERATION
   project owners informing them of the success or failure of the backup process.
 
 
-INSTALLATION
-============
+4. INSTALLATION
+===============
 
   Installation should be performed by, or coordinateed with, the administrator
   of the remote backup server.
@@ -79,7 +79,10 @@ INSTALLATION
      (b) If you decided to keep and rotate all backups, then your cron command
          should look like:
 
-         backup-tools/run-all.sh && backup-tools/utilities/rotate.sh /path/to/backup/dir
+         backup-tools/run-all.sh && backup-tools/utilities/rotate.sh <local-backup-dir> <days-to-keep>
+
+         Consult appendix 1 below for how to use rotate.sh utility which comes
+         with backup-tools.
 
   7. Optional: For added security, you should secure the projects-conf/defaults
      file by making it readable by the owner only:
@@ -90,8 +93,8 @@ INSTALLATION
   A PROJECT" below describes how to configure it to backup a given project.
 
 
-ADD A PROJECT
-=============
+5. ADD A PROJECT
+================
 
   Any project owner can add a project under backup-tools to be backed up on the
   remote server. No action from the remote backup administrator is required.
@@ -114,8 +117,8 @@ ADD A PROJECT
   You are done!
 
 
-CONFIGURING THE REMOTE BACKUP SERVER
-====================================
+6. CONFIGURING THE REMOTE BACKUP SERVER
+=======================================
 
   backup-tools contains a utility for rotating backups, which can be used on the
   local and/or remote backup server.
@@ -140,6 +143,23 @@ CONFIGURING THE REMOTE BACKUP SERVER
 
      This will restrict the commands this key can use to rsync only. For more
      information, check authorized_keys(8) manpage.
+
+
+APPENDIX 1: ROTATING FILES USING ROTATE.SH
+==========================================
+
+  backup-tools/utilities/rotate.sh is a utility for rotating backup files. It
+  assumes a certain directory schema which is the same that backup-tools
+  generates so they are both compatible.
+
+  To use it, you simply need to add a cron job to run the following every day:
+
+    $: backup-tools/utilities/rotate.sh <local-backup-dir> <days-to-keep>
+
+  On the project server, you just need to execute the above after the backup
+  have been sent to the remote server. Check section 4.6.b for more details.
+
+  On the remote server, you should execute it daily using a separate cron job.
 
 
 Enjoy!
