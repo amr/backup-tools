@@ -152,7 +152,15 @@ APPENDIX 1: ROTATING FILES USING ROTATE.SH
   assumes a certain directory schema which is the same that backup-tools
   generates so they are both compatible.
 
-  To use it, you simply need to add a cron job to run the following every day:
+  rotate.sh expects 2 parameters:
+
+    1. Path to the backup directory: The same as LOCAL_BACKUP_DIRECTORY in your
+       backup-tools/projects-conf/defaults file
+
+    2. Number of days to keep: The number of days to keep backups for. Note that
+       if there are multiple backups per day they will be all treated as one day
+
+  To use it, you simply need to add a cron job to run every day:
 
     $: backup-tools/utilities/rotate.sh <local-backup-dir> <days-to-keep>
 
