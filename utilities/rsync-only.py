@@ -65,7 +65,7 @@ def main():
         retval = rsync.execute()
         cli.exit(retval)
 
-    except Exception, e:
+    except StandardError, e:
         if options.debug:
             raise
         else:
