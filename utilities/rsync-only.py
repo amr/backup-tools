@@ -27,7 +27,7 @@ class RsyncWrapper:
         self.rsync_bin = rsync_bin
 
         if not self.is_rsync(command):
-            raise Exception("Invalid rsync command given: %s" % command)
+            raise StandardError("Invalid rsync command given: %s" % command)
         else:
             self.command = command
 
@@ -54,12 +54,12 @@ def main():
     try:
         # Require Python >= 2.4
         if sys.version_info[0] < 2 or sys.version_info[1] < 4:
-            raise Exception("Python 2.4.0 or higher is required")
+            raise StandardError("Python 2.4.0 or higher is required")
 
         # If SSH_ORIGINAL_COMMAND is not specified, then the user is assuming
         # this is a normal login shell.
         if not os.environ.has_key('SSH_ORIGINAL_COMMAND'):
-            raise Exception("This is not a login shell. You can only use rsync.")
+            raise StandardError("This is not a login shell. You can only use rsync.")
 
         rsync = RsyncWrapper(os.environ['SSH_ORIGINAL_COMMAND'])
         retval = rsync.execute()
