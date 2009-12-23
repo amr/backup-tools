@@ -10,6 +10,9 @@
 #        notably: --delete and --server. A generic configurable solution would
 #        be even nicer.
 #
+# @TODO: Support being a login shell, which maybe nicer than the SSH pubkey
+#        command restriction which is limited to SSH keys only.
+#
 
 import os
 import sys
