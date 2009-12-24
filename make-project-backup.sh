@@ -84,8 +84,16 @@ touch $LOG
 LOG=$(readlink -f $LOG)
 
 ###
+# Create the tmp directory
+TMP_DIRECTORY="$LOCAL_BACKUP_DIRECTORY/tmp/$BACKUP_ID"
+mkdir -p "$TMP_DIRECTORY"
+cat > "$LOCAL_BACKUP_DIRECTORY/tmp/README.txt" <<EOF
+This directory is used by backup-tools temporarily while preparing the files and databases. It automatically creates it and is normally empty, unless backup-tools was interrupted manually or failed for other reasons, in which case manual cleanup is required. It is safe to delete all the contents of this directory including this file.
+EOF
+
+###
 # Backup files
-FILES=$(echo "$PROJECT_DIRECTORIES" | toolbox/files.sh "$LOCAL_BACKUP_DIRECTORY/$PROJECT_NAME.files")
+FILES=$(echo "$PROJECT_DIRECTORIES" | toolbox/files.sh "$TMP_DIRECTORY/$PROJECT_NAME.files")
 if [ $? == 0 ]; then 
 	info "Successfully prepared files"
 else 
@@ -95,7 +103,7 @@ fi
 ###
 # Backup MySQL
 if [ -n "$PROJECT_MYSQL_DATABASES" ]; then
-	DATABASES=$(env PROJECT_MYSQL_DATABASES="$PROJECT_MYSQL_DATABASES" MYSQL_USER="$MYSQL_USER" MYSQL_PASSWORD="$MYSQL_PASSWORD" PROJECT_NAME="$PROJECT_NAME" LOCAL_BACKUP_DIRECTORY="$LOCAL_BACKUP_DIRECTORY" toolbox/mysql.sh)
+	DATABASES=$(env PROJECT_MYSQL_DATABASES="$PROJECT_MYSQL_DATABASES" MYSQL_USER="$MYSQL_USER" MYSQL_PASSWORD="$MYSQL_PASSWORD" PROJECT_NAME="$PROJECT_NAME" TMP_DIRECTORY="$TMP_DIRECTORY" toolbox/mysql.sh)
 	if [ $? == 0 ]; then 
 		info "Successfully prepared database(s)"
 	else
@@ -105,7 +113,7 @@ fi
 
 ###
 # Create backup package
-cd "$LOCAL_BACKUP_DIRECTORY" && mkdir "$BACKUP_ID" && mv $FILES $DATABASES "$BACKUP_ID/"
+cd "$LOCAL_BACKUP_DIRECTORY" && mkdir -p "$PROJECT_NAME/$BACKUP_ID" && mv $FILES $DATABASES "$PROJECT_NAME/$BACKUP_ID/"
 if [ $? == 0 ]; then 
 	info "A snapshot of your project files + database(s) has been correctly prepared"
 else 
@@ -113,13 +121,17 @@ else
 fi
 
 ###
+# Clean up tmp directory
+rmdir "$TMP_DIRECTORY" || fatal_error "Could not perform clean up actions. Please contact the backup administrator immediately"
+
+###
 # Report backup size
-info "Total backup size is `du -hs $BACKUP_ID | awk '{ print $1 }'`"
+info "Total backup size is `du -hs $PROJECT_NAME/$BACKUP_ID | awk '{ print $1 }'`"
 
 ###
 # Push to remote server
 info "Starting to transfer the backup snapshot to the remote backup server"
-rsync -av -e "$REMOTE_BACKUP_SHELL" "$BACKUP_ID" "$REMOTE_BACKUP_USER"@"$REMOTE_BACKUP_HOST":"$REMOTE_BACKUP_DIRECTORY/$PROJECT_NAME/"
+rsync -av -e "$REMOTE_BACKUP_SHELL" "$PROJECT_NAME/$BACKUP_ID" "$REMOTE_BACKUP_USER"@"$REMOTE_BACKUP_HOST":"$REMOTE_BACKUP_DIRECTORY/$PROJECT_NAME/"
 if [ $? == 0 ]; then 
 	info "A backup of $PROJECT_NAME has been sent correctly to the backup server ($REMOTE_BACKUP_HOST) and stored as: $REMOTE_BACKUP_DIRECTORY/$PROJECT_NAME/$BACKUP_ID"
 else 

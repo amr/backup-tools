@@ -15,5 +15,5 @@ fi;
 
 # Execute mysqldump on given databases
 for db in $PROJECT_MYSQL_DATABASES;
-	do mysqldump $MYSQLDUMP_OPTS $db | gzip > $LOCAL_BACKUP_DIRECTORY/$PROJECT_NAME.DB-$db.sql.gz && echo $LOCAL_BACKUP_DIRECTORY/$PROJECT_NAME.DB-$db.sql.gz;
+	do mysqldump $MYSQLDUMP_OPTS $db | gzip > $TMP_DIRECTORY/$PROJECT_NAME.DB-$db.sql.gz && echo $TMP_DIRECTORY/$PROJECT_NAME.DB-$db.sql.gz;
 done
