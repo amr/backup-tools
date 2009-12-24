@@ -36,7 +36,7 @@
   1. Copy the backup-tools package somewhere in the system. e.g. To get it
      directly from git into /usr/local/backup-tools:
 
-     $: git clone gitosis@git.edc:backup-tools.git /usr/local/backup-tools
+       $: git clone gitosis@git.edc:backup-tools.git /usr/local/backup-tools
 
   2. Make sure the following files under backup-tools are executable:
 
@@ -74,20 +74,27 @@
      (a) If you decided to cleanup all backups (i.e. not keep any backups
          locally), then your cron command should look like:
 
-         backup-tools/run-all.sh && rm -rf /path/to/backup/*
+           backup-tools/run-all.sh && rm -rf /path/to/backup/*
 
      (b) If you decided to keep and rotate all backups, then your cron command
          should look like:
 
-         backup-tools/run-all.sh && backup-tools/utilities/rotate.sh <local-backup-dir> <days-to-keep>
+           backup-tools/run-all.sh && backup-tools/utilities/rotate.sh <local-backup-dir> <days-to-keep>
 
          Consult appendix 1 below for how to use rotate.sh utility which comes
          with backup-tools.
 
+     By default, run-all.sh will execute projects sequentially. If you wish to
+     pause for a given number of seconds between each project, you can do that
+     by passing the number of seconds to run-all.sh. In the following example,
+     backup-tools will sleep for 15 minutes between each project:
+
+       $: backup-tools/run-all.sh 900
+
   7. Optional: For added security, you should secure the projects-conf/defaults
      file by making it readable by the owner only:
 
-     $: chmod 600 backup-tools/projects-conf/defaults
+       $: chmod 600 backup-tools/projects-conf/defaults
 
   Now backup-tools has been installed and is ready to be used. The section "ADD
   A PROJECT" below describes how to configure it to backup a given project.
@@ -102,17 +109,17 @@
   1. Create a configuration file under backup-tools/projects-conf. You should
      do so by copying the existing project_template file. Example:
 
-     $: cp projects-conf/project_template projects-conf/<your-project-name>
+       $: cp projects-conf/project_template projects-conf/<your-project-name>
 
   2. Open the file and adjust ALL parameters.
 
   3. Make the file executable. Example:
 
-     $: chmod +x projects-conf/<your-project-name>
+       $: chmod +x projects-conf/<your-project-name>
 
   4. Verify that it works as intended by executing:
 
-     $: ./make-project-backup.sh projects-conf/<your-project-name>
+       $: ./make-project-backup.sh projects-conf/<your-project-name>
 
   You are done!
 
@@ -135,11 +142,11 @@
   3. Optional: For better security, you may add the following restrictions to
      the authorized SSH keys in authorized_keys(8) file:
 
-     command="backup-tools/utilities/rsync-only.py",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty
+       command="backup-tools/utilities/rsync-only.py",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty
 
      Then make sure that `backup-tools/utilities/rsync-only.py` is executable:
 
-     $: chmod +x backup-tools/utilities/rsync-only.py
+       $: chmod +x backup-tools/utilities/rsync-only.py
 
      This will restrict the commands this key can use to rsync only. For more
      information, check authorized_keys(8) manpage.
