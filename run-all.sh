@@ -14,15 +14,17 @@ function fatal_error() {
 	exit 1;
 }
 
-if [ -z "$1" ]; then
-	# Execute without sleeping between each project
-	run-parts `dirname $0`/projects-conf
-else
-	# Validate
+# Validate
+if [ -n "$1" ]; then
 	echo $1 | grep -q '^[0-9]\+$' || fatal_error "Invalid sleep interval given: $1 (numeric number of seconds expected)"
-
-	# Execute
-	retval=0
-	for conf in $(run-parts --test $(dirname $0)/projects-conf); do $conf || retval=1; sleep $1; done
-	exit $retval
 fi
+
+# Execute
+retval=0
+for file in $(dirname $0)/projects-conf/*; do
+	if [ -x $file ]; then
+		$file || retval=1
+		test -n "$1" && sleep $1
+	fi	
+done
+exit $retval
