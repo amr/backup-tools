@@ -88,7 +88,7 @@ LOG=$(readlink -f $LOG)
 TMP_DIRECTORY="$LOCAL_BACKUP_DIRECTORY/tmp/$BACKUP_ID"
 mkdir -p "$TMP_DIRECTORY"
 cat > "$LOCAL_BACKUP_DIRECTORY/tmp/README.txt" <<EOF
-This directory is used by backup-tools temporarily while preparing the files and databases. It automatically creates it and is normally empty, unless backup-tools was interrupted manually or failed for other reasons, in which case manual cleanup is required. It is safe to delete all the contents of this directory including this file.
+This directory is used by backup-tools temporarily while preparing the files and databases. It automatically creates it and is normally empty unless backup-tools was interrupted manually or failed for other reasons, in which case manual cleanup is required. It is safe to delete all the contents of this directory including this file.
 EOF
 
 ###
