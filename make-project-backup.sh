@@ -68,6 +68,22 @@ function validate() {
 	test -d "$LOCAL_BACKUP_DIRECTORY" || fatal_error "Invalid directory specified for LOCAL_BACKUP_DIRECTORY: $LOCAL_BACKUP_DIRECTORY"
 }
 
+# Encryption check 
+encrypt () {
+        case "$ENCRYPT" in
+                files)
+		 info "Encrypting $FILES"
+                 $(toolbox/encrypt.sh $FILES)
+                 ;;  
+                 database)
+                info "Encrypting $DATABASES" 
+		$(toolbox/encrypt.sh $DATABASES)
+                 ;;  
+                 none)  
+                        info "No encrption was set continue without encrypting"
+                 shift
+         esac
+
 ###
 # Validation
 validate
@@ -110,6 +126,10 @@ if [ -n "$PROJECT_MYSQL_DATABASES" ]; then
 		fatal_error "Could not backup your database(s). Please check your project configuration"
 	fi
 fi
+
+###
+# Encrypt the backup 
+encrypt
 
 ###
 # Create backup package
