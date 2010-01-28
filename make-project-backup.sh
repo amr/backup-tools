@@ -11,7 +11,6 @@
 #
 #    source projects-conf/<project-name>; ./make-project-backup.sh
 #
-
 # Avoid loops
 test -z "$MAKE_PROJECT_BACKUP" || return;
 MAKE_PROJECT_BACKUP="1"
@@ -70,25 +69,31 @@ function validate() {
 
 # Encryption check 
 encrypt () {
-        case "$ENCRYPT" in
-                files)
-		 info "Encrypting $FILES"
-                 $(toolbox/encrypt.sh $FILES)
-                 ;;  
-                 database)
-                info "Encrypting $DATABASES" 
+	case $ENCRYPT in
+		files)
+		info "Encrypting $PROJECT_NAME.files"
+		$(toolbox/encrypt.sh $FILES)
+		;;
+		databases)
+		info "Encrypting $PROJECT_NAME.databases" 
 		$(toolbox/encrypt.sh $DATABASES)
-                 ;;  
-                 none)  
-                        info "No encrption was set continue without encrypting"
-                 shift
-         esac
+		;;
+		both)
+		info "Encrypting $PROJECT_NAME databases & files"
+		$(toolbox/encrypt.sh $FILES)
+		$(toolbox/encrypt.sh $DATABASES)
+		;;
+		none)
+		info "No encrption was set continue without encrypting"
+		;;
+	esac
+}
 
 ###
 # Validation
 validate
 
-###
+####
 # Unique ID for today's backup
 BACKUP_ID="$PROJECT_NAME.`date +%F.%s`"
 info "Backup ID: $BACKUP_ID"
@@ -130,15 +135,43 @@ fi
 ###
 # Encrypt the backup 
 encrypt
-
 ###
+
 # Create backup package
-cd "$LOCAL_BACKUP_DIRECTORY" && mkdir -p "$PROJECT_NAME/$BACKUP_ID" && mv $FILES $DATABASES "$PROJECT_NAME/$BACKUP_ID/"
-if [ $? == 0 ]; then 
-	info "A snapshot of your project files + database(s) has been correctly prepared"
-else 
-	fatal_error "Could not prepare a final snapshot. Please check your project configuration"
-fi
+case  $ENCRYPT in 
+	none)
+	cd "$LOCAL_BACKUP_DIRECTORY" && mkdir -p "$PROJECT_NAME/$BACKUP_ID" && mv $FILES $DATABASES "$PROJECT_NAME/$BACKUP_ID/"
+	if [ $? == 0 ]; then 
+		info "A snapshot of your project files + database(s) has been correctly prepared"
+	else 
+		fatal_error "Could not prepare a final snapshot. Please check your project configuration"
+	fi
+	;;
+	files)
+	cd "$LOCAL_BACKUP_DIRECTORY" && mkdir -p "$PROJECT_NAME/$BACKUP_ID" && mv $FILES.gpg $DATABASES "$PROJECT_NAME/$BACKUP_ID/"
+        if [ $? == 0 ]; then 
+                info "A snapshot of your encrypted project files + database(s) has been correctly prepared"
+        else 
+                fatal_error "Could not prepare a final snapshot. Please check your project configuration"
+        fi
+	;;
+	databases)
+	cd "$LOCAL_BACKUP_DIRECTORY" && mkdir -p "$PROJECT_NAME/$BACKUP_ID" && mv $FILES $DATABASES.gpg "$PROJECT_NAME/$BACKUP_ID/"
+        if [ $? == 0 ]; then 
+                info "A snapshot of your project files + encrypted database(s) has been correctly prepared"
+        else 
+                fatal_error "Could not prepare a final snapshot. Please check your project configuration"
+        fi
+	;;
+	both)
+	cd "$LOCAL_BACKUP_DIRECTORY" && mkdir -p "$PROJECT_NAME/$BACKUP_ID" && mv $FILES.gpg $DATABASES.gpg "$PROJECT_NAME/$BACKUP_ID/"
+        if [ $? == 0 ]; then 
+                info "A snapshot of your encrypted project files + encrypted database(s) has been correctly prepared"
+        else 
+                fatal_error "Could not prepare a final snapshot. Please check your project configuration"
+        fi
+	;;
+esac
 
 ###
 # Clean up tmp directory

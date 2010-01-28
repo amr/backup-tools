@@ -65,43 +65,6 @@ PROJECT_MYSQL_DATABASES=""
 #
 PROJECT_OWNERS=""
 
-###
-# Encrypt backup files, mysql, both or none
-#
-# Example:
-#
-#   ENCRYPT="files"
-ENCRYPT="" 
-
-###
-# Encrypt the backup with key 
-#
-# Example:
-#
-#   ENCRYPTION_TYPE="KEY" for encrypting with a gpg key
-#   KEY_NAME="admin" the generated gpg key name to use while encrypting the backup
-#
-ENCRYPTION_TYPE=""
-KEY_NAME=""
-
-###
-# Encrypt the backup with a passphrase 
-#
-# Example:
-#
-#   ENCRYPTION_TYPE="MyVerySecretPsSword" set the passphrase you want choose very hard one 
-#
-ENCRYPTION_PHRASE=""
-
-###
-# Encryption algorithm
-#
-# Example:
-#
-#   ALGORITHM="AES256" choose on of the follwoing algorithm "3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH, CAMELLIA128 CAMELLIA192, CAMELLIA256" 
-#
-ALGORITHM=""
-
 ##############################################################################
 # MAIN
 ##############################################################################
