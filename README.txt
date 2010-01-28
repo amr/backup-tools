@@ -47,7 +47,13 @@
   3. Open backup-tools/projects-conf/default and provide ALL parameters. They
      are all documented inline.
 
-  4. Configure a passwordless SSH key for the user which backup-tools cron job
+  4. Create a gpg key to encrypte you backup with a key using the command 
+      $: gpg --gen-key
+
+     Or if you simply want to encrypt your backup with a passphrase, ignore creating gpg keys
+     and enter the passphrase at backup-tools/projects-conf/default
+
+  5. Configure a passwordless SSH key for the user which backup-tools cron job
      will run under. This key must be authorized on the remote backup server.
 
      You must also approve the remote backup server SSH Fingerprint. You can do
@@ -59,7 +65,7 @@
 
      SSH will prompt your to verify and accept the fingerprint. Answer Yes.
 
-  5. Setup rotation of local backup entries. There will be local backup entries
+  6. Setup rotation of local backup entries. There will be local backup entries
      of your project(s), you can safely remove them as they have been synced to
      the remote backup server or you may wish to keep them for added safety.
 
@@ -67,7 +73,7 @@
      how to accomplish the rotation or automatic cleanup of synchronized backup
      entries.
 
-  6. Add a cronjob to run backup-tools/run-all.sh as frequent as you require and
+  7. Add a cronjob to run backup-tools/run-all.sh as frequent as you require and
      perform cleanup or rotation after it has synchronized the newly created
      backups.
 
@@ -91,7 +97,7 @@
 
        $: backup-tools/run-all.sh 900
 
-  7. Optional: For added security, you should secure the projects-conf/defaults
+  8. Optional: For added security, you should secure the projects-conf/defaults
      file by making it readable by the owner only:
 
        $: chmod 600 backup-tools/projects-conf/defaults
