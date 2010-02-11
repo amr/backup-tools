@@ -39,13 +39,16 @@ cd $ROOT_DIR
 PROJECT_NAME=""
 
 ###
-# Project directories to backup, space separated
+# Project directories and files to backup, space separated
 #
-# If a directory contains a space it must be escaped. Example:
+# If a path contains a space it must be escaped. Example:
 #
-#   PROJECT_DIRECTORIES="/path/to/dir1 /path/to/dir\ 2\ with\ spaces /path/to/dir3"
+#   PROJECT_PATHS="/path/to/dir1 /path/to/dir\ 2\ with\ spaces /path/to/file1"
 #
-PROJECT_DIRECTORIES=""
+# The special value "none" can be used to indicate that no files or directories
+# needs to be backed up for this project.
+#
+PROJECT_PATHS=""
 
 ###
 # MySQL databases to backup, space separated
@@ -53,6 +56,9 @@ PROJECT_DIRECTORIES=""
 # Example:
 #
 #   PROJECT_MYSQL_DATABASES="hawaa_world jawaly cas"
+#
+# The special value "none" can be used to indicate that no MySQL databases
+# needs to be backed up for this project.
 #
 PROJECT_MYSQL_DATABASES=""
 

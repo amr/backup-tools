@@ -70,7 +70,7 @@ REMOTE_BACKUP_SHELL="ssh"
 # Example:
 #
 #   ENCRYPT="files"
-ENCRYPT="" 
+ENCRYPT="none" 
 
 ###
 # Encrypt the backup with key 

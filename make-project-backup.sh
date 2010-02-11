@@ -45,46 +45,44 @@ function mail_report() {
 
 # Validate run environment
 function validate() {
-	REQUIRED_VARS=(PROJECT_NAME PROJECT_DIRECTORIES LOCAL_BACKUP_DIRECTORY REMOTE_BACKUP_HOST REMOTE_BACKUP_USER REMOTE_BACKUP_DIRECTORY)
+	REQUIRED_VARS=(PROJECT_NAME PROJECT_PATHS PROJECT_MYSQL_DATABASES LOCAL_BACKUP_DIRECTORY REMOTE_BACKUP_HOST REMOTE_BACKUP_USER REMOTE_BACKUP_DIRECTORY)
 	for var in ${REQUIRED_VARS[@]}; do
 		value=$(eval echo $`echo $var`)
 		test -n "$value" || fatal_error "$var is empty"
 	done
 
 	# MySQL
-	if [[ -n "$PROJECT_MYSQL_DATABASES" && -z "$MYSQL_USER" ]]; then
+	if [[ "$PROJECT_MYSQL_DATABASES" != "none" && -z "$MYSQL_USER" ]]; then
 		fatal_error "MYSQL_USER is empty"
-	elif [ -z "$PROJECT_MYSQL_DATABASES" ]; then
-		info "No MySQL databases configured to backup"
 	fi
 
-	# Project directories
-	for dir in $PROJECT_DIRECTORIES; do
-		test -d "$dir" || fatal_error "Invalid directory specified in PROJECT_DIRECTORIES: $dir"
+	# Project paths
+	test "$PROJECT_PATHS" != "none" && for path in $PROJECT_PATHS; do
+		test -a "$path" || fatal_error "Invalid file or directory specified in PROJECT_PATHS: $path"
 	done
 
 	# Local backup directory
 	test -d "$LOCAL_BACKUP_DIRECTORY" || fatal_error "Invalid directory specified for LOCAL_BACKUP_DIRECTORY: $LOCAL_BACKUP_DIRECTORY"
 }
 
-# Encryption check 
+# Encryption
 encrypt () {
 	case $ENCRYPT in
 		files)
-		info "Encrypting $PROJECT_NAME.files"
-		$(toolbox/encrypt.sh $FILES)
+			info "Encrypting $PROJECT_NAME.files"
+			$(toolbox/encrypt.sh $FILES)
 		;;
 		databases)
-		info "Encrypting $PROJECT_NAME.databases" 
-		$(toolbox/encrypt.sh $DATABASES)
+			info "Encrypting $PROJECT_NAME.databases" 
+			$(toolbox/encrypt.sh $DATABASES)
 		;;
 		both)
-		info "Encrypting $PROJECT_NAME databases & files"
-		$(toolbox/encrypt.sh $FILES)
-		$(toolbox/encrypt.sh $DATABASES)
+			info "Encrypting $PROJECT_NAME databases & files"
+			$(toolbox/encrypt.sh $FILES)
+			$(toolbox/encrypt.sh $DATABASES)
 		;;
 		none)
-		info "No encrption was set continue without encrypting"
+			info "Encryption is not enabled, continuing without encrypting"
 		;;
 	esac
 }
@@ -114,22 +112,29 @@ EOF
 
 ###
 # Backup files
-FILES=$(echo "$PROJECT_DIRECTORIES" | toolbox/files.sh "$TMP_DIRECTORY/$PROJECT_NAME.files")
-if [ $? == 0 ]; then 
-	info "Successfully prepared files"
-else 
-	fatal_error "Could not backup your files. Please check your project configuration"
+if [ "$PROJECT_PATHS" != "none" ]; then
+	FILES=$(echo "$PROJECT_PATHS" | toolbox/files.sh "$TMP_DIRECTORY/$PROJECT_NAME.files")
+	if [ $? == 0 ]; then 
+		info "Successfully prepared files"
+	else
+		fatal_error "Could not backup your files. Please check your project configuration"
+	fi
+else
+	FILES=""
+	info "No files or directories are set to be backed up"
 fi
 
 ###
 # Backup MySQL
-if [ -n "$PROJECT_MYSQL_DATABASES" ]; then
+if [ "$PROJECT_MYSQL_DATABASES" != "none" ]; then
 	DATABASES=$(env PROJECT_MYSQL_DATABASES="$PROJECT_MYSQL_DATABASES" MYSQL_USER="$MYSQL_USER" MYSQL_PASSWORD="$MYSQL_PASSWORD" PROJECT_NAME="$PROJECT_NAME" TMP_DIRECTORY="$TMP_DIRECTORY" toolbox/mysql.sh)
 	if [ $? == 0 ]; then 
 		info "Successfully prepared database(s)"
 	else
 		fatal_error "Could not backup your database(s). Please check your project configuration"
 	fi
+else
+	info "No MySQL databases are set to be backed up"
 fi
 
 ###
@@ -140,37 +145,37 @@ encrypt
 # Create backup package
 case  $ENCRYPT in 
 	none)
-	cd "$LOCAL_BACKUP_DIRECTORY" && mkdir -p "$PROJECT_NAME/$BACKUP_ID" && mv $FILES $DATABASES "$PROJECT_NAME/$BACKUP_ID/"
-	if [ $? == 0 ]; then 
-		info "A snapshot of your project files + database(s) has been correctly prepared"
-	else 
-		fatal_error "Could not prepare a final snapshot. Please check your project configuration"
-	fi
-	;;
+		cd "$LOCAL_BACKUP_DIRECTORY" && mkdir -p "$PROJECT_NAME/$BACKUP_ID" && mv $FILES $DATABASES "$PROJECT_NAME/$BACKUP_ID/"
+		if [ $? == 0 ]; then 
+			info "A snapshot of your project files + database(s) has been correctly prepared"
+		else
+			fatal_error "Could not prepare a final snapshot. Please check your project configuration"
+		fi
+		;;
 	files)
-	cd "$LOCAL_BACKUP_DIRECTORY" && mkdir -p "$PROJECT_NAME/$BACKUP_ID" && mv $FILES.gpg $DATABASES "$PROJECT_NAME/$BACKUP_ID/"
-        if [ $? == 0 ]; then 
-                info "A snapshot of your encrypted project files + database(s) has been correctly prepared"
-        else 
-                fatal_error "Could not prepare a final snapshot. Please check your project configuration"
-        fi
-	;;
+		cd "$LOCAL_BACKUP_DIRECTORY" && mkdir -p "$PROJECT_NAME/$BACKUP_ID" && mv $FILES.gpg $DATABASES "$PROJECT_NAME/$BACKUP_ID/"
+		if [ $? == 0 ]; then 
+			info "A snapshot of your encrypted project files + database(s) has been correctly prepared"
+		else
+			fatal_error "Could not prepare a final snapshot. Please check your project configuration"
+		fi
+		;;
 	databases)
-	cd "$LOCAL_BACKUP_DIRECTORY" && mkdir -p "$PROJECT_NAME/$BACKUP_ID" && mv $FILES $DATABASES.gpg "$PROJECT_NAME/$BACKUP_ID/"
-        if [ $? == 0 ]; then 
-                info "A snapshot of your project files + encrypted database(s) has been correctly prepared"
-        else 
-                fatal_error "Could not prepare a final snapshot. Please check your project configuration"
-        fi
-	;;
+		cd "$LOCAL_BACKUP_DIRECTORY" && mkdir -p "$PROJECT_NAME/$BACKUP_ID" && mv $FILES $DATABASES.gpg "$PROJECT_NAME/$BACKUP_ID/"
+		if [ $? == 0 ]; then 
+			info "A snapshot of your project files + encrypted database(s) has been correctly prepared"
+		else
+			fatal_error "Could not prepare a final snapshot. Please check your project configuration"
+		fi
+		;;
 	both)
-	cd "$LOCAL_BACKUP_DIRECTORY" && mkdir -p "$PROJECT_NAME/$BACKUP_ID" && mv $FILES.gpg $DATABASES.gpg "$PROJECT_NAME/$BACKUP_ID/"
-        if [ $? == 0 ]; then 
-                info "A snapshot of your encrypted project files + encrypted database(s) has been correctly prepared"
-        else 
-                fatal_error "Could not prepare a final snapshot. Please check your project configuration"
-        fi
-	;;
+		cd "$LOCAL_BACKUP_DIRECTORY" && mkdir -p "$PROJECT_NAME/$BACKUP_ID" && mv $FILES.gpg $DATABASES.gpg "$PROJECT_NAME/$BACKUP_ID/"
+		if [ $? == 0 ]; then 
+			info "A snapshot of your encrypted project files + encrypted database(s) has been correctly prepared"
+		else
+			fatal_error "Could not prepare a final snapshot. Please check your project configuration"
+		fi
+		;;
 esac
 
 ###
