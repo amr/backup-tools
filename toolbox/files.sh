@@ -4,4 +4,4 @@
 # Creates a single compressed archive of files, reading paths from stdin.
 #
 
-xargs tar -czf $1.tar.gz && echo $1.tar.gz && exit 0
+xargs tar -cjf $1.tar.bz2 && echo $1.tar.bz2 && exit 0
