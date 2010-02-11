@@ -1,0 +1,6 @@
+1.0-rc3 => 1.0-rc4
+==================
+
+  * PROJECT_DIRECTORIES was renamed to PROEJCT_PATHS
+  * PROJECT_MYSQL_DATABASES is now required (cannot be empty), if no databases
+    are needed to be backed up, it should be set to the special value "none"
