@@ -4,8 +4,8 @@
 # Makes a backup copy of a MySQL database
 #
 
-# Prepare mysql args, this is needed to include only non-empty arguments.
-MYSQL_OPTS=""
+# Prepare mysql args
+MYSQL_OPTS="--master-data=2"
 if [ -n "$MYSQL_USER" ]; then
 	MYSQL_OPTS="$MYSQL_OPTS -u$MYSQL_USER"
 fi
