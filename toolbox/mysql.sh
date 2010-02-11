@@ -4,14 +4,21 @@
 # Makes a backup copy of a MySQL database
 #
 
-# Prepare mysqldump args, this is needed to include only non-empty arguments.
-MYSQLDUMP_OPTS=""
+# Prepare mysql args, this is needed to include only non-empty arguments.
+MYSQL_OPTS=""
 if [ -n "$MYSQL_USER" ]; then
-	MYSQLDUMP_OPTS="$MYSQLDUMP_OPTS -u$MYSQL_USER"
-fi;
+	MYSQL_OPTS="$MYSQL_OPTS -u$MYSQL_USER"
+fi
 if [ -n "$MYSQL_PASSWORD" ]; then
-	MYSQLDUMP_OPTS="$MYSQLDUMP_OPTS -p$MYSQL_PASSWORD"
-fi;
+	MYSQL_OPTS="$MYSQL_OPTS -p$MYSQL_PASSWORD"
+fi
+if [ -n "$MYSQL_HOST" ]; then
+	MYSQL_OPTS="$MYSQL_OPTS -h$MYSQL_HOST"
+fi
+
+# Check that the MySQL server at given host is alive and that the credentials
+# are correct
+mysqladmin $MYSQL_OPTS ping 2>&1 > /dev/null || exit 1
 
 # Execute mysqldump on given databases
 for db in $PROJECT_MYSQL_DATABASES;

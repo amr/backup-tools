@@ -12,6 +12,10 @@ MYSQL_USER=""
 MYSQL_PASSWORD=""
 
 ###
+# MySQL Host
+MYSQL_HOST=""
+
+###
 # Absolute path to the local backup destination where backup files will be
 # prepared inside and later pushed to the remote server. No trailing slash.
 #
@@ -70,7 +74,7 @@ REMOTE_BACKUP_SHELL="ssh"
 # Example:
 #
 #   ENCRYPT="files"
-ENCRYPT="none" 
+ENCRYPT="none"
 
 ###
 # Encrypt the backup with key 
