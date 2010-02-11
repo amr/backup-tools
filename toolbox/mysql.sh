@@ -16,9 +16,6 @@ if [ -n "$MYSQL_HOST" ]; then
 	MYSQL_OPTS="$MYSQL_OPTS -h$MYSQL_HOST"
 fi
 
-# Options specific to mysqldump
-MYSQLDUMP_OPTS="--master-data=2"
-
 # Check that the MySQL server at given host is alive and that the credentials
 # are correct
 mysqladmin $MYSQL_OPTS ping 2>&1 > /dev/null || exit 1

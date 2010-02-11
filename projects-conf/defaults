@@ -5,15 +5,31 @@
 
 ###
 # MySQL username which have access to all project databases
+#
 MYSQL_USER=""
 
 ###
 # Password for MySQL user above
+#
 MYSQL_PASSWORD=""
 
 ###
 # MySQL Host
+#
 MYSQL_HOST=""
+
+###
+# MySQL dump options -- optional, customize only if needed.
+#
+# Those options are passed as is to mysqldump tool. By default it's only
+# --master-data=2 which adds a comment to the top of the dump with the master
+# information, which allows each backup to be used for instantiating a slave.
+#
+# Example:
+#
+#   MYSQLDUMP_OPTS="--master-data=2 --log-error=/path/to/log --quick"
+#
+MYSQLDUMP_OPTS="--master-data=2"
 
 ###
 # Absolute path to the local backup destination where backup files will be
