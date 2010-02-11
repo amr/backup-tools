@@ -5,7 +5,7 @@
 #
 
 # Prepare mysql args
-MYSQL_OPTS="--master-data=2"
+MYSQL_OPTS=""
 if [ -n "$MYSQL_USER" ]; then
 	MYSQL_OPTS="$MYSQL_OPTS -u$MYSQL_USER"
 fi
@@ -15,6 +15,9 @@ fi
 if [ -n "$MYSQL_HOST" ]; then
 	MYSQL_OPTS="$MYSQL_OPTS -h$MYSQL_HOST"
 fi
+
+# Options specific to mysqldump
+MYSQLDUMP_OPTS="--master-data=2"
 
 # Check that the MySQL server at given host is alive and that the credentials
 # are correct
