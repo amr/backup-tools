@@ -25,5 +25,5 @@ mysqladmin $MYSQL_OPTS ping 2>&1 > /dev/null || exit 1
 
 # Execute mysqldump on given databases
 for db in $PROJECT_MYSQL_DATABASES;
-	do mysqldump $MYSQL_OPTS $db | gzip > $TMP_DIRECTORY/$PROJECT_NAME.DB-$db.sql.gz && echo $TMP_DIRECTORY/$PROJECT_NAME.DB-$db.sql.gz;
+	do mysqldump $MYSQLDUMP_OPTS $MYSQL_OPTS $db | gzip > $TMP_DIRECTORY/$PROJECT_NAME.DB-$db.sql.gz && echo $TMP_DIRECTORY/$PROJECT_NAME.DB-$db.sql.gz;
 done
