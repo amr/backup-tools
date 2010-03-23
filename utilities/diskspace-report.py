@@ -158,9 +158,9 @@ $projects
 
         # Single project's template
         'project': """
-  * ${name}
+  * ${name} ($percentage)
     - Backups: $count
-    - Total: $size
+    - Uses: $size
     - Average: $average
     - Minimum: $minimum
     - Maximum: $maximum"""
@@ -194,16 +194,19 @@ $projects
         return markdown.markdown(self.as_text())
 
     def generate(self):
-        projects = []
         total_size = 0
         last_day_size = 0
         for p in self.projects:
             total_size += p.size
             last_day_size += p.snapshots[-1].size
+
+        projects = []
+        for p in self.projects:
             projects.append({
                 'name': p.name,
                 'count': len(p.snapshots),
             	'size': filesizeformat(p.size),
+                'percentage': "%d%%" % int((1.0 * p.size / total_size) * 100),
             	'average': filesizeformat(p.average),
             	'minimum': filesizeformat(p.minimum),
             	'maximum': filesizeformat(p.maximum),
