@@ -153,7 +153,8 @@ $projects
         'summary': """
   * Projects: $count
   * Disk space: $size
-  * Last day: $last_day_size""",
+  * Free on the same partition: $free
+  * Last day only: $last_day_size""",
 
         # Single project's template
         'project': """
@@ -208,12 +209,16 @@ $projects
             	'maximum': filesizeformat(p.maximum),
             })
 
+        partition_info = os.statvfs(self.path)
+        free = filesizeformat(partition_info.f_bsize * partition_info.f_bavail)
+
         self._data = {
             'projects': projects,
             'summary': {
                 'count': len(self.projects),
                 'size': filesizeformat(total_size),
                 'last_day_size': filesizeformat(last_day_size),
+                'free': free
             },
             'time': time.strftime("%Y-%m-%d %H:%M:%S %Z"),
         }
