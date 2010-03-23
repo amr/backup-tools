@@ -23,7 +23,7 @@
 # Usage: ./diskspace-report.py /path/to/backup/root
 #
 
-import os, optparse, subprocess, re
+import os, optparse, subprocess, re, time
 from optparse import OptionParser
 from string import Template
 
@@ -138,7 +138,9 @@ class Project(object):
 class DiskSpaceReport(object):
     templates = {
         # Overall report template
-        'report': """Summary
+        'report': """*Report generated at:* $time
+
+Summary
 =======
 $summary
 
@@ -177,7 +179,7 @@ $projects
         for project in self._data['projects']:
             projects += Template(self.templates['project']).substitute(**project)
 
-        return Template(self.templates['report']).substitute(summary=summary, projects=projects)
+        return Template(self.templates['report']).substitute(summary=summary, projects=projects, time=self._data['time'])
 
     def as_html(self):
         # For the time being, we generate HTML from the text version which is
@@ -212,7 +214,8 @@ $projects
                 'count': len(self.projects),
                 'size': filesizeformat(total_size),
                 'last_day_size': filesizeformat(last_day_size),
-            }
+            },
+            'time': time.strftime("%Y-%m-%d %H:%M:%S %Z"),
         }
 
     def generated(self):
