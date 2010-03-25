@@ -77,7 +77,7 @@ class Snapshot(object):
         m = re.compile(self.ID_REGEX).match(self.id)
         if m:
             # For the time being, we don't need anything except the timestamp
-            self.timestamp = m.group('year')
+            self.timestamp = int(m.group('timestamp'))
         else:
             raise ValueError("Invalid snapshot ID (%s) for snapshot (%s)" % (self.id, self.path))
 
