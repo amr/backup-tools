@@ -156,7 +156,7 @@ $projects
         # Summary template
         'summary': """
   * Projects: $count
-  * Disk space: $size
+  * Uses: $size
   * Free on the same partition: $free
   * Last day only: $last_day_size""",
 
@@ -196,7 +196,21 @@ $projects
         except ImportError:
             raise NotImplementedError("The HTML version of the report currently relies on Markdown library. You will need to install it first.")
 
-        return markdown.markdown(self.as_text())
+        return """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>Disk space usage - %s</title>
+  </head>
+  <style type="text/css" media="screen">
+    ul {
+      margin: 5px;
+    }
+  </style>
+<body>
+%s
+</body>
+</html>
+""" % (time.strftime('%Y-%m-%d'), markdown.markdown(self.as_text()))
 
     def generate(self):
         total_size = 0
@@ -254,7 +268,10 @@ $projects
 if __name__ == "__main__":
     cli = OptionParser(usage="%prog [options] <path-to-backup-root>",
                        description="Generates a report of the disk space usage on the root backups directory")
-    cli.add_option('-f', '--format', dest='format', default='text', help="Report format: html or text [default: %default]")
+    cli.add_option('-f', '--format', dest='format', default='text',
+                   help="Report format: html or text [default: %default]")
+    cli.add_option('-a', '--archive', dest='archive', default='text', metavar="DIR",
+                   help="Path to the directory where to store backups. If specified, the report will not be printed to STDOUT but will be stored in the directory under a well-organized structure")
     cli.add_option("-d", "--debug", dest="debug", action="store_true",
                    help="do not catch python exceptions, useful for debugging")
 
@@ -270,11 +287,24 @@ if __name__ == "__main__":
             cli.error("Python 2.4.0 or higher is required")
 
         report = DiskSpaceReport(args[0])
-        if options.format in ['text', 'html']:
-            func = getattr(report, 'as_%s' % options.format)
-            print func()
-        else:
+        if options.format not in ['text', 'html']:
             cli.error("Invalid format specified (%s)" % options.format)
+
+        func = getattr(report, 'as_%s' % options.format)
+        output = func()
+        if not options.archive:
+            print output
+        else:
+            if options.format == 'html':
+                ext = 'html'
+            else:
+                ext = 'txt'
+            t = time.localtime()
+            d = os.path.join(os.path.expanduser(options.archive), time.strftime("%Y/%m", t))
+            subprocess.call(['mkdir', '-p', d])
+            f = open(os.path.join(d, time.strftime("report.%Y-%m-%d." + ext, t)), 'w')
+            f.write(output)
+            f.close()
     except Exception, e:
         if options.debug:
             raise
