@@ -136,6 +136,7 @@ class Project(object):
 
     def last(self):
        return self.snapshots[-1]
+    last = property(last)
 
 
 class DiskSpaceReport(object):
