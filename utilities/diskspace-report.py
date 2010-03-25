@@ -134,6 +134,10 @@ class Project(object):
         return self.size / len(self.snapshots)
     average = property(average)
 
+    def last(self):
+        return self.snapshots[-1].size
+    last = property(last)
+
 
 class DiskSpaceReport(object):
     templates = {
@@ -163,7 +167,8 @@ $projects
     - Uses: $size
     - Average: $average
     - Minimum: $minimum
-    - Maximum: $maximum"""
+    - Maximum: $maximum
+    - Last: $last"""
     }
 
     def __init__(self, path):
@@ -206,10 +211,11 @@ $projects
                 'name': p.name,
                 'count': len(p.snapshots),
             	'size': filesizeformat(p.size),
-                'percentage': "%d%%" % int((1.0 * p.size / total_size) * 100),
+                'percentage': "%.1f%%" % ((1.0 * p.size / total_size) * 100),
             	'average': filesizeformat(p.average),
             	'minimum': filesizeformat(p.minimum),
             	'maximum': filesizeformat(p.maximum),
+                'last': filesizeformat(p.last),
             })
 
         partition_info = os.statvfs(self.path)
