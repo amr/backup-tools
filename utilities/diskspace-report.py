@@ -122,17 +122,20 @@ class Project(object):
 
     @memoized
     def minimum(self):
-        return min([s.size for s in self.snapshots])
+        return min([s for s in self.snapshots])
     minimum = property(minimum)
 
     @memoized
     def maximum(self):
-        return max([s.size for s in self.snapshots])
+        return max([s for s in self.snapshots])
     maximum = property(maximum)
 
     def average(self):
         return self.size / len(self.snapshots)
     average = property(average)
+
+    def last(self):
+       return self.snapshots[-1]
 
 
 class DiskSpaceReport(object):
@@ -162,8 +165,8 @@ $projects
     - Backups: $count
     - Uses: $size
     - Average: $average
-    - Minimum: $minimum
-    - Maximum: $maximum
+    - Minimum: $minimum ($minimum_date)
+    - Maximum: $maximum ($maximum_date)
     - Last: $last ($last_date)"""
     }
 
@@ -223,10 +226,12 @@ $projects
             	'size': filesizeformat(p.size),
                 'percentage': "%.1f%%" % ((1.0 * p.size / total_size) * 100),
             	'average': filesizeformat(p.average),
-            	'minimum': filesizeformat(p.minimum),
-            	'maximum': filesizeformat(p.maximum),
-                'last': filesizeformat(p.snapshots[-1].size),
-                'last_date': time.strftime("%Y-%m-%d %H:%M", time.localtime(p.snapshots[-1].timestamp))
+            	'minimum': filesizeformat(p.minimum.size),
+                'minimum_date': time.strftime("%Y-%m-%d %H:%M", time.localtime(p.minimum.timestamp)),
+            	'maximum': filesizeformat(p.maximum.size),
+                'maximum_date': time.strftime("%Y-%m-%d %H:%M", time.localtime(p.maximum.timestamp)),
+                'last': filesizeformat(p.last.size),
+                'last_date': time.strftime("%Y-%m-%d %H:%M", time.localtime(p.last.timestamp))
             })
 
         partition_info = os.statvfs(self.path)
