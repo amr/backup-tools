@@ -123,23 +123,23 @@ class Project(object):
 
     @memoized
     def minimum(self):
-        snapshots = self.snapshots
-        snapshots.sort(key=snapshot_size)
-        return snapshots[0]
+        self.snapshots.sort(key=snapshot_size)
+        return self.snapshots[0]
     minimum = property(minimum)
 
     @memoized
     def maximum(self):
-        snapshots = self.snapshots
-        snapshots.sort(key=snapshot_size)
-        return snapshots[-1]
+        self.snapshots.sort(key=snapshot_size)
+        return self.snapshots[-1]
     maximum = property(maximum)
 
     def average(self):
         return self.size / len(self.snapshots)
     average = property(average)
 
+    @memoized
     def last(self):
+        self.snapshots.sort(key=snapshot_size)
         return self.snapshots[-1]
     last = property(last)
 
