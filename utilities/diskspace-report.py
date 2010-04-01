@@ -66,9 +66,11 @@ def filesizeformat(bytes):
         return "%.1f MB" % (bytes / (1024 * 1024))
     return "%.1f GB" % (bytes / (1024 * 1024 * 1024))
 
-# Helper for sorting snapshots based on their size
+# Helpers for sorting snapshots
 def snapshot_size(snapshot):
     return snapshot.size
+def snapshot_timestamp(snapshot):
+    return snapshot.timestamp
 
 class Snapshot(object):
     ID_REGEX = r"^(?P<project>\w+).(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}).(?P<timestamp>\d+)$"
@@ -89,10 +91,6 @@ class Snapshot(object):
         output = subprocess.Popen(['du', '-bs', self.path], stdout=subprocess.PIPE).communicate()[0]
         return int(re.findall(r'\w+', output)[0])
     size = property(size)
-
-    # Allow sorting snapshots
-    def __cmp__(self, other):
-        return cmp(self.timestamp, other.timestamp)
 
 
 class Project(object):
@@ -119,7 +117,7 @@ class Project(object):
                 continue
 
             snapshots.append(Snapshot(entry_path))
-        snapshots.sort()
+        snapshots.sort(key=snapshot_timestamp)
         return snapshots
     snapshots = property(snapshots)
 
