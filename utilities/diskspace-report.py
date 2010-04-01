@@ -29,23 +29,23 @@ from string import Template
 
 # See: http://wiki.python.org/moin/PythonDecoratorLibrary#Memoize
 class memoized(object):
-   """Decorator that caches a function's return value each time it is called.
-   If called later with the same arguments, the cached value is returned, and
-   not re-evaluated.
-   """
-   def __init__(self, func):
-      self.func = func
-      self.cache = {}
-   def __call__(self, *args):
-      try:
-         return self.cache.setdefault(args,self.func(*args))
-      except TypeError:
-         # uncachable -- for instance, passing a list as an argument.
-         # Better to not cache than to blow up entirely.
-         return self.func(*args)
-   def __repr__(self):
-      """Return the function's docstring."""
-      return self.func.__doc__
+    """Decorator that caches a function's return value each time it is called.
+    If called later with the same arguments, the cached value is returned, and
+    not re-evaluated.
+    """
+    def __init__(self, func):
+        self.func = func
+        self.cache = {}
+    def __call__(self, *args):
+       try:
+           return self.cache.setdefault(args,self.func(*args))
+       except TypeError:
+           # uncachable -- for instance, passing a list as an argument.
+           # Better to not cache than to blow up entirely.
+           return self.func(*args)
+    def __repr__(self):
+        """Return the function's docstring."""
+        return self.func.__doc__
 
 # See: http://docs.djangoproject.com/en/dev/ref/templates/builtins/#filesizeformat
 def filesizeformat(bytes):
@@ -68,7 +68,7 @@ def filesizeformat(bytes):
 
 # Helper for sorting snapshots based on their size
 def snapshot_size(snapshot):
-   return snapshot.size
+    return snapshot.size
 
 class Snapshot(object):
     ID_REGEX = r"^(?P<project>\w+).(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}).(?P<timestamp>\d+)$"
@@ -125,12 +125,16 @@ class Project(object):
 
     @memoized
     def minimum(self):
-        return min(self.snapshots, key=snapshot_size)
+        snapshots = self.snapshots
+        snapshots.sort(key=snapshot_size)
+        return snapshots[0]
     minimum = property(minimum)
 
     @memoized
     def maximum(self):
-        return max(self.snapshots, key=snapshot_size)
+        snapshots = self.snapshots
+        snapshots.sort(key=snapshot_size)
+        return snapshots[-1]
     maximum = property(maximum)
 
     def average(self):
@@ -138,7 +142,7 @@ class Project(object):
     average = property(average)
 
     def last(self):
-       return self.snapshots[-1]
+        return self.snapshots[-1]
     last = property(last)
 
 
@@ -276,7 +280,7 @@ if __name__ == "__main__":
                        description="Generates a report of the disk space usage on the root backups directory")
     cli.add_option('-f', '--format', dest='format', default='text',
                    help="Report format: html or text [default: %default]")
-    cli.add_option('-a', '--archive', dest='archive', default='text', metavar="DIR",
+    cli.add_option('-a', '--archive', dest='archive', action='store_true', metavar="DIR",
                    help="Path to the directory where to store backups. If specified, the report will not be printed to STDOUT but will be stored in the directory under a well-organized structure")
     cli.add_option("-d", "--debug", dest="debug", action="store_true",
                    help="do not catch python exceptions, useful for debugging")
