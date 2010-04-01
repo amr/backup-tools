@@ -66,6 +66,9 @@ def filesizeformat(bytes):
         return "%.1f MB" % (bytes / (1024 * 1024))
     return "%.1f GB" % (bytes / (1024 * 1024 * 1024))
 
+# Helper for sorting snapshots based on their size
+def snapshot_size(snapshot):
+   return snapshot.size
 
 class Snapshot(object):
     ID_REGEX = r"^(?P<project>\w+).(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}).(?P<timestamp>\d+)$"
@@ -122,12 +125,12 @@ class Project(object):
 
     @memoized
     def minimum(self):
-        return min([s.size for s in self.snapshots])
+        return min(self.snapshots, key=snapshot_size)
     minimum = property(minimum)
 
     @memoized
     def maximum(self):
-        return max([s.size for s in self.snapshots])
+        return max(self.snapshots, key=snapshot_size)
     maximum = property(maximum)
 
     def average(self):
