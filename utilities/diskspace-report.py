@@ -122,12 +122,12 @@ class Project(object):
 
     @memoized
     def minimum(self):
-        return min([s for s in self.snapshots])
+        return min([s.size for s in self.snapshots])
     minimum = property(minimum)
 
     @memoized
     def maximum(self):
-        return max([s for s in self.snapshots])
+        return max([s.size for s in self.snapshots])
     maximum = property(maximum)
 
     def average(self):
