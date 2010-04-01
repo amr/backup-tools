@@ -139,7 +139,7 @@ class Project(object):
 
     @memoized
     def last(self):
-        self.snapshots.sort(key=snapshot_size)
+        self.snapshots.sort(key=snapshot_timestamp)
         return self.snapshots[-1]
     last = property(last)
 
