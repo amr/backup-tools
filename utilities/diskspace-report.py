@@ -280,7 +280,7 @@ if __name__ == "__main__":
                        description="Generates a report of the disk space usage on the root backups directory")
     cli.add_option('-f', '--format', dest='format', default='text',
                    help="Report format: html or text [default: %default]")
-    cli.add_option('-a', '--archive', dest='archive', action='store_true', metavar="DIR",
+    cli.add_option('-a', '--archive', dest='archive', default=None, metavar="DIR",
                    help="Path to the directory where to store backups. If specified, the report will not be printed to STDOUT but will be stored in the directory under a well-organized structure")
     cli.add_option("-d", "--debug", dest="debug", action="store_true",
                    help="do not catch python exceptions, useful for debugging")
