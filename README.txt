@@ -112,15 +112,17 @@
   Any project owner can add a project under backup-tools to be backed up on the
   remote server. No action from the remote backup administrator is required.
 
-  1. Create a configuration file under backup-tools/projects-conf. You should
-     do so by copying the existing project_template file. Example:
+  1. Create the configuration files under backup-tools/projects-conf. You should
+     do so by copying the existing*.template file. Example:
 
-       $: cp projects-conf/project_template projects-conf/<your-project-name>
+       $: cp projects-conf/defaults.template project-conf/defaults
+       $: cp projects-conf/project.template projects-conf/<your-project-name>
+      
+  2. Open the files and adjust ALL parameters.
 
-  2. Open the file and adjust ALL parameters.
+  3. Make the files executables. Example:
 
-  3. Make the file executable. Example:
-
+       $: chmod +x projects-conf/defaults
        $: chmod +x projects-conf/<your-project-name>
 
   4. Verify that it works as intended by executing:
