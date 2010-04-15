@@ -71,6 +71,21 @@ PROJECT_MYSQL_DATABASES=""
 #
 PROJECT_OWNERS=""
 
+###
+# MySQL username, if not set in the defaults file, provide it here
+#
+#MYSQL_USER=""
+
+###
+# Password for MySQL user above
+#
+#MYSQL_PASSWORD=""
+
+###
+# MySQL Host
+#
+#MYSQL_HOST=""
+
 ##############################################################################
 # MAIN
 ##############################################################################

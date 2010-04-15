@@ -6,6 +6,8 @@
 ###
 # MySQL username which have access to all project databases
 #
+# Alternatively, each project will have to provide this
+#
 MYSQL_USER=""
 
 ###
@@ -29,7 +31,7 @@ MYSQL_HOST=""
 #
 #   MYSQLDUMP_OPTS="--master-data=2 --log-error=/path/to/log --quick"
 #
-MYSQLDUMP_OPTS="--master-data=2"
+MYSQLDUMP_OPTS=""
 
 ###
 # Absolute path to the local backup destination where backup files will be
