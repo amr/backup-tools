@@ -1,21 +1,14 @@
-Liquid Web Backup Server Schedule
----------------------------------
-Time            Project
----------------------------------
-00:00           UASE
----------------------------------
-01:00           Jawaly
----------------------------------
-02:00           ISX
----------------------------------
-03:00           CNBC
----------------------------------
-04:00           EDC Website
----------------------------------
-05:00           Upload Center
----------------------------------
-06:00           One Card
----------------------------------
+OVERVIEW
+========
+
+  In order to guarantee efficient use of the backup servers' bandwidth, all
+  projects coordinate together to define a time table for performing backups
+  so that ideally, at any given time only 1 project is syncing its backups with
+  the remote backup server.
 
 
-Jeel Backup Server Schedule ?
+SCHEDULES
+=========
+
+  * LiquidWeb backup server: http://atrium.edc/edc/node/187
+  * Jeel backup server: http://atrium.edc/edc/node/186
