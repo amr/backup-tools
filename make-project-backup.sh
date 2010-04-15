@@ -40,7 +40,7 @@ function info() {
 
 # Send out the e-mail notification
 function mail_report() {
-	mail -s "$PROJECT_NAME backup report for `date +%F`: $1" $PROJECT_OWNERS -- -F "Backup Tools" -f "<noreply@`hostname`>" < $LOG
+	echo -ne "From: \"Backup Tools\" <noreply@`hostname`>\r\nSubject: $PROJECT_NAME backup report for `date +%F`: $1\r\n\r\n" | cat - $LOG | sendmail $PROJECT_OWNERS
 }
 
 # Validate run environment
