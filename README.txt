@@ -47,11 +47,14 @@
   3. Open backup-tools/projects-conf/default and provide ALL parameters. They
      are all documented inline.
 
-  4. Create a gpg key to encrypte you backup with a key using the command 
-      $: gpg --gen-key
+  4. Optional: If you want to encrypt your backup using a GPG key, then create
+     a gpg key using the command :
 
-     Or if you simply want to encrypt your backup with a passphrase, ignore creating gpg keys
-     and enter the passphrase at backup-tools/projects-conf/default
+       $: gpg --gen-key
+
+     If you simply want to encrypt your backup with a passphrase, you do not
+     need to create gpg keys, just provide the passphrase in backup-tools/
+     projects-conf/defaults
 
   5. Configure a passwordless SSH key for the user which backup-tools cron job
      will run under. This key must be authorized on the remote backup server.
@@ -183,7 +186,7 @@ APPENDIX 1: ROTATING FILES USING ROTATE.SH
     $: backup-tools/utilities/rotate.sh <local-backup-dir> <days-to-keep>
 
   On the project server, you just need to execute the above after the backup
-  have been sent to the remote server. Check section 4.6.b for more details.
+  have been sent to the remote server. Check section 4.7.b for more details.
 
   On the remote server, you should execute it daily using a separate cron job.
 
