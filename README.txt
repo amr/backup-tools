@@ -152,12 +152,15 @@
 
        command="backup-tools/utilities/rsync-only.py",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty
 
+     It should be prepended to each key. Consult the authorized_keys(8) man page
+     for more details.
+
      Then make sure that `backup-tools/utilities/rsync-only.py` is executable:
 
        $: chmod +x backup-tools/utilities/rsync-only.py
 
      This will restrict the commands this key can use to rsync only. For more
-     information, check authorized_keys(8) manpage.
+     information, check authorized_keys(8) man page.
 
 
 APPENDIX 1: ROTATING FILES USING ROTATE.SH
