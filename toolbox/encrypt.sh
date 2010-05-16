@@ -38,7 +38,7 @@ encrypt () {
 		if [ "$ENCRYPTION_TYPE" == "1" ]; then
 				gpg -e -r $KEY_NAME $1 && rm -rf $1
 			else
-				echo $ENCRYPTION_PHRASE | gpg --passphrase-fd 0 --$ALGORITHM -c < $1 > $1.gpg && rm -rf $1
+				echo $ENCRYPTION_PHRASE | gpg --passphrase-fd 0 --cipher-algo $ALGORITHM -c < $1 > $1.gpg && rm -rf $1
 		fi
 }
 encrypt $1
