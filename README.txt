@@ -44,7 +44,7 @@
      make-project-backup.sh
      toolbox/*.sh
 
-  3. Open backup-tools/projects-conf/default and provide ALL parameters. They
+  3. Copy backup-tools/projects-conf/defaults.template to backup-tools/projects-conf/defaults and provide ALL parameters. They
      are all documented inline.
 
   4. Optional: If you want to encrypt your backup using a GPG key, then create
