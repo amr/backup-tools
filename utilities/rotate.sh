@@ -17,7 +17,7 @@ function fatal_error() {
 
 # Rotate entries in a given dir
 rotate () {
-        ls $1 | sort -rn | cut -d '.' -f1,2 | uniq | sed -e ''1,"$KEEP"d'' | while read backup; do test -n "$backup" && rm -rf $dir/$backup* || return 1; done;
+        ls $1 | sort -rn | uniq | sed -e ''1,"$KEEP"d'' | while read backup; do test -n "$backup" && rm -rf $dir/$backup* || return 1; done;
 	return 0
 }
 
