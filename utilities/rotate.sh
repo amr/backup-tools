@@ -3,7 +3,9 @@
 #
 # Rotates backup items - to be used on the remote backup server
 #
-# Usage: ./rotate.sh /path/to/backup/root PROJECTNAME [days to keep]
+# Usage: ./rotate.sh /path/to/backup/root PROJECTNAME [days to keep, you can also use w for week and m for months,
+# 						       NOTE: Maximum values for w and m is 4. if you want more,
+#						       you can always use any number of days]
 #
 
 # Default backup days to keep 
@@ -21,9 +23,39 @@ rotate () {
 	return 0
 }
 
+# Time Stamp
+WEEK="7"
+MONTH="30"
+
 # Keep
 if [ -n "$3" ]; then
 	KEEP="$3"
+	case $KEEP in
+		1w)
+			KEEP="$WEEK"	
+		;;
+		2w)
+			KEEP="`echo $WEEK *2 | bc`"
+		;;
+		3w)
+			KEEP="`echo $WEEK *3 | bc`"
+		;;
+		4w)
+			KEEP="`echo $WEEK *4 | bc`"
+		;;
+		1m)
+			KEEP="$MONTH"
+		;;
+		2m)
+			KEEP="`echo $MONTH *2 | bc`"
+		;;
+		3m)
+			KEEP="`echo $MONTH *3 | bc`"
+		;;
+		4m)
+			KEEP="`echo $MONTH *4 | bc`"
+		;;
+	esac
 fi
 
 # Project name
