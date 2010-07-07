@@ -4,8 +4,7 @@
 # Rotates backup items - to be used on the remote backup server
 #
 # Usage: ./rotate.sh /path/to/backup/root PROJECTNAME [days to keep, you can also use w for week and m for months,
-# 						       NOTE: Maximum values for w and m is 4. if you want more,
-#						       you can always use any number of days]
+#  NOTE: Maximum values for w and m is 4. if you want more, you can always use any number of days]
 #
 
 # Default backup days to keep 
@@ -65,7 +64,7 @@ fi
 
 # Validate
 test -d "$1" || fatal_error "Invalid directory: $1"
-echo $KEEP | grep -q '^[0-9]\+$' || fatal_error "Invalid backup days to keep (numeric value expected): $KEEP"
+echo $KEEP | egrep -q '^[1-4\][w,m]|^[0-9]*$' || fatal_error "Invalid backup days to keep (numeric value expected, or you have exceeded the maximum values for Weeks and Months): $KEEP"
 
 # Rotate!
 cd $1; find $PROJECT_NAME -type d | head -n 1 | while read dir; do rotate $dir; done;
