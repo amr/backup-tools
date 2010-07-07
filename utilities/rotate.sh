@@ -46,8 +46,10 @@ KEEP_DATE (){
 }
 
 # Keep
+if [ -n "$3" ]; then
 
-KEEP_DATE "`date +%F`" ""`date -d "$3 ago" +%F`""
+	KEEP_DATE "`date +%F`" ""`date -d "$3 ago" +%F`""
+fi
 
 # Project name
 if [ -n "$2" ]; then
