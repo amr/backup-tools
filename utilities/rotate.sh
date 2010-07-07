@@ -3,8 +3,7 @@
 #
 # Rotates backup items - to be used on the remote backup server
 #
-# Usage: ./rotate.sh /path/to/backup/root PROJECTNAME [days to keep, you can also use w for week and m for months,
-#  NOTE: Maximum values for w and m is 4. if you want more, you can always use any number of days]
+# Usage: ./rotate.sh /path/to/backup/root PROJECTNAME [days, weeks or months to keep Example: 10 days]
 #
 
 # Default backup days to keep 
@@ -22,39 +21,32 @@ rotate () {
 	return 0
 }
 
-# Time Stamp
-WEEK="7"
-MONTH="30"
+
+## Calculate Date to get Keep Value 
+
+DATE_TO_SECONDS () {
+    date --utc --date "$1" +%s
+}
+
+DAY_IN_SECONDS=86400
+KEEP_DATE (){
+    DATE_1=$(DATE_TO_SECONDS $1)
+    DATE_2=$(DATE_TO_SECONDS $2)
+    DIFF_SECONDS=$((DATE_2-DATE_1))
+    if ((DIFF_SECONDS < 0)); then
+	 DEL_MINUS="-1"
+    else 
+	 DEL_MINUS="1"
+    fi
+    KEEP=$((DIFF_SECONDS/DAY_IN_SECONDS*DEL_MINUS))
+}
+
 
 # Keep
+
 if [ -n "$3" ]; then
-	KEEP="$3"
-	case $KEEP in
-		1w)
-			KEEP="$WEEK"	
-		;;
-		2w)
-			KEEP="`echo $WEEK *2 | bc`"
-		;;
-		3w)
-			KEEP="`echo $WEEK *3 | bc`"
-		;;
-		4w)
-			KEEP="`echo $WEEK *4 | bc`"
-		;;
-		1m)
-			KEEP="$MONTH"
-		;;
-		2m)
-			KEEP="`echo $MONTH *2 | bc`"
-		;;
-		3m)
-			KEEP="`echo $MONTH *3 | bc`"
-		;;
-		4m)
-			KEEP="`echo $MONTH *4 | bc`"
-		;;
-	esac
+
+	KEEP_DATE "`date +%F`" ""`date -d "$3 ago" +%F`""
 fi
 
 # Project name
@@ -64,7 +56,7 @@ fi
 
 # Validate
 test -d "$1" || fatal_error "Invalid directory: $1"
-echo $KEEP | egrep -q '^[1-4\][w,m]|^[0-9]*$' || fatal_error "Invalid backup days to keep (numeric value expected, or you have exceeded the maximum values for Weeks and Months): $KEEP"
+echo $KEEP | egrep -q '^[0-9]*$' || fatal_error "Invalid backup days to keep (numeric value expected): $KEEP"
 
 # Rotate!
 cd $1; find $PROJECT_NAME -type d | head -n 1 | while read dir; do rotate $dir; done;
