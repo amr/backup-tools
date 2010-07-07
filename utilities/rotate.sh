@@ -29,25 +29,25 @@ DATE_TO_SECONDS () {
 }
 
 DAY_IN_SECONDS=86400
+
 KEEP_DATE (){
+    
     DATE_1=$(DATE_TO_SECONDS $1)
     DATE_2=$(DATE_TO_SECONDS $2)
     DIFF_SECONDS=$((DATE_2-DATE_1))
+    
     if ((DIFF_SECONDS < 0)); then
 	 DEL_MINUS="-1"
     else 
 	 DEL_MINUS="1"
     fi
+    
     KEEP=$((DIFF_SECONDS/DAY_IN_SECONDS*DEL_MINUS))
 }
 
-
 # Keep
 
-if [ -n "$3" ]; then
-
-	KEEP_DATE "`date +%F`" ""`date -d "$3 ago" +%F`""
-fi
+KEEP_DATE "`date +%F`" ""`date -d "$3 ago" +%F`""
 
 # Project name
 if [ -n "$2" ]; then
@@ -56,7 +56,6 @@ fi
 
 # Validate
 test -d "$1" || fatal_error "Invalid directory: $1"
-echo $KEEP | egrep -q '^[0-9]*$' || fatal_error "Invalid backup days to keep (numeric value expected): $KEEP"
 
 # Rotate!
 cd $1; find $PROJECT_NAME -type d | head -n 1 | while read dir; do rotate $dir; done;
