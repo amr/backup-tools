@@ -54,6 +54,8 @@ fi
 # Project name
 if [ -n "$2" ]; then
 	PROJECT_NAME="$2"
+else
+	fatal_error "You have to enter a Project name to rotate"
 fi
 
 # Validate
