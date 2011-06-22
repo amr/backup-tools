@@ -36,7 +36,7 @@ INSTALLATION
   1. Copy the backup-tools package somewhere in the system. e.g. To get it
      directly from git into /usr/local/backup-tools:
 
-       $: git clone gitosis@git.edc:backup-tools.git /usr/local/backup-tools
+       $: git clone https://amr@github.com/amr/backup-tools.git /usr/local/backup-tools
 
   2. Make sure the following files under backup-tools are executable:
 
