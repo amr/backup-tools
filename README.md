@@ -64,7 +64,7 @@ INSTALLATION
      account under which backup-tools will run in future. If that account is
      root, then as root, you will need to SSH like this:
 
-       $: ssh <remote-backup-user>@<remote-backup-host>
+       $: ssh remote-backup-user@remote-backup-host
 
      SSH will prompt your to verify and accept the fingerprint. Answer Yes.
 
