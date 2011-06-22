@@ -1,12 +1,12 @@
-1. INTRODUCTION
-===============
+INTRODUCTION
+============
 
   backup-tools is an organized set of tools developed here in EDC for being used
   by projects for backing up their data to a remote server.
 
 
-2. A WORD ON THE FEATURE-SET
-============================
+A WORD ON THE FEATURE-SET
+=========================
 
   backup-tools is not intended to be a one-size-fits-all solution, but rather,
   implements the common needs of projects. Should a project need more features
@@ -15,8 +15,8 @@
   merged to the base backup-tools.
 
 
-3. THEORY OF OPERATION
-======================
+THEORY OF OPERATION
+===================
 
   Backup-tools will be installed on the real live production servers. A config
   file will be created for each project, telling backup-tools about the project
@@ -27,8 +27,8 @@
   project owners informing them of the success or failure of the backup process.
 
 
-4. INSTALLATION
-===============
+INSTALLATION
+============
 
   Installation should be performed by, or coordinateed with, the administrator
   of the remote backup server.
@@ -109,8 +109,8 @@
   A PROJECT" below describes how to configure it to backup a given project.
 
 
-5. ADD A PROJECT
-================
+ADD A PROJECT
+=============
 
   Any project owner can add a project under backup-tools to be backed up on the
   remote server. No action from the remote backup administrator is required.
@@ -135,8 +135,8 @@
   You are done!
 
 
-6. CONFIGURING THE REMOTE BACKUP SERVER
-=======================================
+CONFIGURING THE REMOTE BACKUP SERVER
+====================================
 
   backup-tools contains a utility for rotating backups, which can be used on the
   local and/or remote backup server.
@@ -192,3 +192,4 @@ APPENDIX 1: ROTATING FILES USING ROTATE.SH
 
 
 Enjoy!
+
